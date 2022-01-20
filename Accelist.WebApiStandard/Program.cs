@@ -39,6 +39,9 @@ if (app.Environment.IsDevelopment())
     db.Database.EnsureCreated();
 }
 
+// @Ryan: RFC 7807 error handling
+app.UseExceptionHandler("/error");
+
 app.UseAuthorization();
 
 app.MapControllers();
