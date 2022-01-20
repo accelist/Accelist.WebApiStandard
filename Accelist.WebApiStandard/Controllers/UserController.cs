@@ -19,9 +19,9 @@ namespace Accelist.WebApiStandard.Controllers
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<string> Post([FromBody] RegisterUserRequest model)
+        public async Task<string> Post([FromBody] RegisterUserRequest model, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(model);
+            var result = await Mediator.Send(model, cancellationToken);
             return result;
         }
     }
