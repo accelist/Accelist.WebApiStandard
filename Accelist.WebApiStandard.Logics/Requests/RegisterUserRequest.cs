@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NUlid;
 
-namespace Accelist.WebApiStandard.Logics
+namespace Accelist.WebApiStandard.Logics.Requests
 {
     /// <summary>
     /// Represents data required to process the user registration logic.
@@ -37,12 +37,13 @@ namespace Accelist.WebApiStandard.Logics
             this.DB = db;
 
             RuleFor(Q => Q.FullName).NotEmpty();
-            RuleFor(Q => Q.UserName).NotEmpty().MustAsync(BeAvailable).WithMessage("Username is not available.");
+            RuleFor(Q => Q.UserName).NotEmpty().MustAsync(BeAvailableUsername).WithMessage("Username is not available.");
             RuleFor(Q => Q.Password).NotEmpty().MinimumLength(8).MaximumLength(64);
-            RuleFor(Q => Q.VerifyPassword).NotEmpty().Equal(Q => Q.Password);
+            RuleFor(Q => Q.VerifyPassword).NotEmpty()
+                .Equal(Q => Q.Password).WithMessage("Password verification mismatched!");
         }
 
-        public async Task<bool> BeAvailable(string? username, CancellationToken cancellationToken)
+        public async Task<bool> BeAvailableUsername(string? username, CancellationToken cancellationToken)
         {
             var exist = await DB.Users.Where(Q => Q.UserName == username).AnyAsync(cancellationToken);
             return !exist;

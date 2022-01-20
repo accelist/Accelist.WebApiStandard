@@ -1,5 +1,5 @@
 using Accelist.WebApiStandard.Entities;
-using Accelist.WebApiStandard.Logics;
+using Accelist.WebApiStandard.Logics.Requests;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +21,10 @@ builder.Services.AddDbContextPool<StandardDb>(dbContextBuilder =>
         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
-// @Ryan: Add FluentValidation and Mediatr
+// @Ryan: Add FluentValidation, Mediatr, AutoMapper from the other assembly
 builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RegisterUserRequestValidator>());
 builder.Services.AddMediatR(typeof(RegisterUserRequestHandler));
+builder.Services.AddAutoMapper(typeof(ChangePasswordRequestAutomapperProfile));
 
 var app = builder.Build();
 

@@ -1,4 +1,4 @@
-﻿using Accelist.WebApiStandard.Logics;
+﻿using Accelist.WebApiStandard.Logics.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +19,13 @@ namespace Accelist.WebApiStandard.Controllers
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<string> Post([FromBody] RegisterUserRequest model, CancellationToken cancellationToken)
+        public async Task<ActionResult<string>> Post([FromBody] RegisterUserRequest model, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(model, cancellationToken);
+            // if needed, the result can be re-sent into Mediator as another request
+            // useful when creating logic pipeline for a complex app!
+            // model error can be added manually using method           : ModelState.AddModelError("...", "...");
+            // RFC 7807 compliant response can be produced using method : return ValidationProblem(ModelState);
             return result;
         }
     }
