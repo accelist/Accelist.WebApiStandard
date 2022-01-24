@@ -40,6 +40,7 @@ namespace Accelist.WebApiStandard.Controllers
             var validationResult = await ChangePasswordRequestValidator.ValidateAsync(request, cancellationToken);
             if (validationResult != null && validationResult.IsValid == false)
             {
+                // AddToModelState is from FluentValidation.AspNetCore.
                 validationResult.AddToModelState(ModelState, null);
                 return ValidationProblem(ModelState);
             }
