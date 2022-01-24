@@ -3,6 +3,9 @@ using Accelist.WebApiStandard.Logics.Requests;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,28 @@ builder.Services.AddDbContextPool<StandardDb>(dbContextBuilder =>
 builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RegisterUserRequestValidator>());
 builder.Services.AddMediatR(typeof(RegisterUserRequestHandler));
 builder.Services.AddAutoMapper(typeof(ChangePasswordRequestAutomapperProfile));
+
+var serviceName = "Accelist.WebApiStandard";
+var serviceVersion = "1.0.0";
+
+// @Ryan: Configure important OpenTelemetry settings, the console exporter, and automatic instrumentation
+builder.Services.AddOpenTelemetryTracing(b =>
+{
+    b.AddConsoleExporter()
+        .AddJaegerExporter(o =>
+        {
+            o.AgentHost = "jaeger";
+            o.AgentPort = 6831; // use port number here
+        })
+        .AddSource(serviceName)
+        .SetResourceBuilder(
+            ResourceBuilder.CreateDefault()
+                .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+        .AddHttpClientInstrumentation()
+        .AddAspNetCoreInstrumentation()
+        .AddNpgsql()
+        .AddEntityFrameworkCoreInstrumentation();
+});
 
 var app = builder.Build();
 
