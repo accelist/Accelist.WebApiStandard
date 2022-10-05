@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
+    <PackageReference Include="FluentValidation" Version="11.2.2" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2" />
+    <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="3.1.1" />
+    <PackageReference Include="OpenIddict.Quartz" Version="3.1.1" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.5.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Accelist.WebApiStandard.Contracts\Accelist.WebApiStandard.Contracts.csproj" />
+    <ProjectReference Include="..\Accelist.WebApiStandard.Entities\Accelist.WebApiStandard.Entities.csproj" />
+  </ItemGroup>
+
+</Project>
