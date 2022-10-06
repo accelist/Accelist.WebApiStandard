@@ -1,6 +1,5 @@
 ﻿using Accelist.WebApiStandard.Contracts.RequestModels;
 using Accelist.WebApiStandard.Contracts.ResponseModels;
-using Accelist.WebApiStandard.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -10,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Accelist.WebApiStandard.Microservice.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/user")]
     [ApiController]
     public class UserApiController : ControllerBase
     {
@@ -39,9 +38,11 @@ namespace Accelist.WebApiStandard.Microservice.Controllers
 
         // POST api/<UserApiController>
         [HttpPost]
-        public async Task<ActionResult<CreateUserResponse>> Post([FromBody] CreateUserRequest model, CancellationToken cancellationToken)
+        public async Task<ActionResult<CreateUserResponse>> Post(
+            [FromBody] CreateUserRequest model,
+            CancellationToken cancellationToken)
         {
-            var validationResult = await _createUserRequestValidator.ValidateAsync(model) ??
+            var validationResult = await _createUserRequestValidator.ValidateAsync(model, cancellationToken) ??
                 throw new InvalidOperationException("Failed to validate CreateUserRequest model.");
 
             if (validationResult.IsValid == false)
@@ -54,9 +55,9 @@ namespace Accelist.WebApiStandard.Microservice.Controllers
             return response;
         }
 
-        // PUT api/<UserApiController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // POST api/<UserApiController>/5
+        [HttpPost("{id}")]
+        public void Post(int id, [FromBody] string value)
         {
         }
 

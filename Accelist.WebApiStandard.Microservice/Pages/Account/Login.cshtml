@@ -1,0 +1,32 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Sign in";
+    Layout = "_LoginLayout";
+}
+
+<form method="post">
+    <img class="mb-4" src="~/favicon.png" alt="logo" width="128" height="128">
+    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <div class="form-floating">
+        <input asp-for="Input.Email" type="email" class="form-control" 
+            autocomplete="username" aria-required="true" placeholder="john.smith@accelist.com" autofocus />
+        <label asp-for="Input.Email">Email address</label>
+    </div>
+    <div class="form-floating">
+        <input asp-for="Input.Password" type="password" class="form-control" 
+            autocomplete="current-password" aria-required="true" placeholder="Password" />
+        <label asp-for="Input.Password"></label>
+    </div>
+    <div class="checkbox mb-3">
+        <label asp-for="Input.RememberMe" class="form-label">
+            <input class="form-check-input" asp-for="Input.RememberMe" />
+            @Html.DisplayNameFor(m => m.Input.RememberMe)
+        </label>
+    </div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div>
+        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Sign in</button>
+    </div>
+</form>
