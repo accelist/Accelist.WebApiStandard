@@ -364,3 +364,6 @@ FodyWeavers.xsd
 /Accelist.WebApiStandard/standard.db-wal
 /Accelist.WebApiStandard/standard.db-shm
 /Accelist.WebApiStandard/standard.db
+
+# SchemaSpy
+**/SchemaSpy/*.jar
