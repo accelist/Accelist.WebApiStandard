@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoApi", "DemoApi\DemoApi.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoClient", "DemoClient\DemoClient.csproj", "{FB02ACAF-C173-4D84-A2E6-F1610FF51112}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accelist.WebApiStandard.KafkaBackgroundService", "Accelist.WebApiStandard.KafkaBackgroundService\Accelist.WebApiStandard.KafkaBackgroundService.csproj", "{23CC1C61-23AC-4D75-A8EA-99B49871724D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{FB02ACAF-C173-4D84-A2E6-F1610FF51112}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB02ACAF-C173-4D84-A2E6-F1610FF51112}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB02ACAF-C173-4D84-A2E6-F1610FF51112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23CC1C61-23AC-4D75-A8EA-99B49871724D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23CC1C61-23AC-4D75-A8EA-99B49871724D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23CC1C61-23AC-4D75-A8EA-99B49871724D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23CC1C61-23AC-4D75-A8EA-99B49871724D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{EB54D579-6D74-492D-AF6E-1DDFC2B8DC4D} = {71BE6730-FCF7-4295-91F2-28D61C847DFF}
 		{21CFB511-AA2B-4D21-9644-EA67543B49EE} = {5A9A66A1-D848-4E8E-8F62-3D6549EB91EC}
 		{FB02ACAF-C173-4D84-A2E6-F1610FF51112} = {5A9A66A1-D848-4E8E-8F62-3D6549EB91EC}
+		{23CC1C61-23AC-4D75-A8EA-99B49871724D} = {71BE6730-FCF7-4295-91F2-28D61C847DFF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EB378958-B384-4B00-A47B-4134DF4113BB}

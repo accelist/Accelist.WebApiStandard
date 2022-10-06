@@ -1,8 +1,13 @@
+using Accelist.WebApiStandard.Services;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.ConfigureSerilogForApplication(options =>
+{
+    options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.Microservice.log";
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -12,12 +17,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.AddApplicationServices(options =>
+builder.Services.Configure<AppSettings>(builder.Configuration);
+builder.Services.AddApplicationServices(options =>
 {
     var configuration = builder.Configuration;
     options.PostgreSqlConnectionString = configuration.GetConnectionString("PostgreSql");
     options.EnableAutomaticMigration = builder.Environment.IsDevelopment();
-    options.AddUserFromHttpContext = true;
+    options.AddWebAppOnlyServices = true;
     // Use api/generate-rsa-keys to get new random values 
     options.OidcSigningKey = configuration["oidcSigningKey"];
     options.OidcEncryptionKey = configuration["oidcEncryptionKey"];

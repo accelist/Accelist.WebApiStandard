@@ -1,16 +1,17 @@
 ﻿using Accelist.WebApiStandard.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace Accelist.WebApiStandard.Microservice.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly AppSettings _settings;
+        private readonly IOptions<AppSettings> _options;
 
-        public IndexModel(AppSettings appSettings)
+        public IndexModel(IOptions<AppSettings> options)
         {
-            _settings = appSettings;
+            _options = options;
         }
 
         public IActionResult OnGet()
@@ -20,7 +21,7 @@ namespace Accelist.WebApiStandard.Microservice.Pages
                 return Challenge();
             }
 
-            return Redirect(_settings.FrontEndHost);
+            return Redirect(_options.Value.FrontEndHost);
         }
     }
 }

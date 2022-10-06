@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Accelist.WebApiStandard.KafkaBackgroundService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

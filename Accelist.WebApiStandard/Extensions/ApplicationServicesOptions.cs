@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Accelist.WebApiStandard.Extensions
+namespace Microsoft.Extensions.Hosting
 {
     public class ApplicationServicesOptions
     {
@@ -12,8 +12,19 @@ namespace Accelist.WebApiStandard.Extensions
 
         public string OidcEncryptionKey { set; get; } = "";
 
-        public bool AddUserFromHttpContext { set; get; }
+        public bool AddWebAppOnlyServices { set; get; }
 
         public ClaimsPrincipal? User { set; get; } 
+
+        public KafkaServicesOptions KafkaServicesOptions { set; get; } = new KafkaServicesOptions();
+    }
+
+    public class KafkaServicesOptions
+    {
+        public string BootstrapServers { set; get; } = "localhost:9092";
+
+        public string ClientId { set; get; } = Environment.MachineName;
+
+        public string ConsumerGroup { set; get; } = "group-1";
     }
 }
