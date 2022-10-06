@@ -14,9 +14,15 @@ namespace Accelist.WebApiStandard.Validators
             _userManager = userManager;
 
             RuleFor(Q => Q.GivenName).NotEmpty().MaximumLength(64);
+
             RuleFor(Q => Q.FamilyName).NotEmpty().MaximumLength(64);
-            RuleFor(Q => Q.Email).NotEmpty().MaximumLength(256).EmailAddress().MustAsync(NotDuplicateEmail).WithMessage("Email is already registered.");
-            RuleFor(Q => Q.Password).NotEmpty().MustAsync(HaveValidPassword).WithMessage("Password is not strong enough.");
+
+            RuleFor(Q => Q.Email).NotEmpty().MaximumLength(256).EmailAddress()
+                .MustAsync(NotDuplicateEmail).WithMessage("Email is already registered.");
+
+            RuleFor(Q => Q.Password).NotEmpty()
+                .MustAsync(HaveValidPassword).WithMessage("Password is not strong enough.");
+
             RuleFor(Q => Q.VerifyPassword).NotEmpty().Equal(Q => Q.Password);
         }
 

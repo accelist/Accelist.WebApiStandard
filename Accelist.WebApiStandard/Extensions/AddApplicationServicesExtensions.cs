@@ -18,6 +18,7 @@ using Quartz;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -192,6 +193,20 @@ namespace Microsoft.AspNetCore.Builder
                     options.UseAspNetCore();
                     options.UseDataProtection();
                 });
+
+            if (opts.AddUserFromHttpContext)
+            {
+                builder.Services.AddHttpContextAccessor();
+                builder.Services.AddScoped(di =>
+                {
+                    var contextAccessor = di.GetRequiredService<IHttpContextAccessor>();
+                    return contextAccessor.HttpContext?.User ?? new ClaimsPrincipal();
+                });
+            }
+            else
+            {
+                builder.Services.AddScoped(di => opts.User ?? new ClaimsPrincipal());
+            }
 
             services.AddHealthChecks()
                 .AddNpgSql(opts.PostgreSqlConnectionString);

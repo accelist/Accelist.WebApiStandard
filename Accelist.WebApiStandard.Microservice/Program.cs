@@ -7,6 +7,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.AddApplicationServices(options =>
+{
+    var configuration = builder.Configuration;
+    options.PostgreSqlConnectionString = configuration.GetConnectionString("PostgreSql");
+    options.EnableAutomaticMigration = builder.Environment.IsDevelopment();
+    options.AddUserFromHttpContext = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
