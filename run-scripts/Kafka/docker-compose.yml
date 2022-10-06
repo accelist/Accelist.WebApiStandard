@@ -34,11 +34,6 @@ services:
           adminApi:
             enabled: true
             urls: ["http://redpanda:9644"]
-        connect:
-          enabled: true
-          clusters:
-            - name: local-connect-cluster
-              url: http://connect:8083
         server:
           listenPort: 9093
     ports:
@@ -46,15 +41,21 @@ services:
     depends_on:
       - redpanda
 
-  connect:
-    image: debezium/connect:2.0
-    environment:
-      - GROUP_ID=1
-      - CONFIG_STORAGE_TOPIC=inventory.configs
-      - OFFSET_STORAGE_TOPIC=inventory.offset
-      - STATUS_STORAGE_TOPIC=inventory.status
-      - BOOTSTRAP_SERVERS=redpanda:29092
-    ports:
-      - 8083:8083
-    depends_on:
-      - redpanda
+  # CONSOLE_CONFIG_FILE: |
+  # connect:
+  #   enabled: true
+  #   clusters:
+  #     - name: local-connect-cluster
+  #       url: http://connect:8083
+  # connect:
+  #   image: debezium/connect:2.0
+  #   environment:
+  #     - GROUP_ID=1
+  #     - CONFIG_STORAGE_TOPIC=inventory.configs
+  #     - OFFSET_STORAGE_TOPIC=inventory.offset
+  #     - STATUS_STORAGE_TOPIC=inventory.status
+  #     - BOOTSTRAP_SERVERS=redpanda:29092
+  #   ports:
+  #     - 8083:8083
+  #   depends_on:
+  #     - redpanda
