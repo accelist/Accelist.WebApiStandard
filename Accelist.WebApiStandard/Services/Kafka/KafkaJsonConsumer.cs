@@ -1,6 +1,6 @@
 using Confluent.Kafka;
 using FluentValidation;
-using MediatR;
+using MassTransit.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Accelist.WebApiStandard.Services.Kafka
 {
-    public abstract class KafkaJsonConsumer<T> : BackgroundService where T : class, IBaseRequest
+    public abstract class KafkaJsonConsumer<T> : BackgroundService where T : class
     {
         private readonly IConsumer<Ignore, string> _consumer;
         private readonly ILogger<KafkaJsonConsumer<T>> _logger;

@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoApi", "DemoApi\DemoApi.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoClient", "DemoClient\DemoClient.csproj", "{FB02ACAF-C173-4D84-A2E6-F1610FF51112}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accelist.WebApiStandard.KafkaWorker", "Accelist.WebApiStandard.KafkaWorker\Accelist.WebApiStandard.KafkaWorker.csproj", "{41591ADF-08A5-433A-B245-5E79559F05A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accelist.WebApiStandard.KafkaWorker", "Accelist.WebApiStandard.KafkaWorker\Accelist.WebApiStandard.KafkaWorker.csproj", "{41591ADF-08A5-433A-B245-5E79559F05A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

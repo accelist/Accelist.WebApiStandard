@@ -1,12 +1,12 @@
 ﻿using Accelist.WebApiStandard.Entities;
-using Accelist.WebApiStandard.Extensions;
+using Accelist.WebApiStandard.RabbitMqConsumers;
 using Accelist.WebApiStandard.RequestHandlers;
 using Accelist.WebApiStandard.Services;
 using Accelist.WebApiStandard.Services.Kafka;
 using Accelist.WebApiStandard.Validators;
 using Confluent.Kafka;
 using FluentValidation;
-using MediatR;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
@@ -18,7 +18,6 @@ using Microsoft.IdentityModel.Tokens;
 using Quartz;
 using Serilog;
 using Serilog.Events;
-using Serilog.Formatting.Compact;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -27,10 +26,10 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IHostBuilder ConfigureSerilogForApplication(this IHostBuilder host, Action<ConfigureSerilogOptions> optionsBuilder)
+        public static IHostBuilder ConfigureSerilogForApplication(this IHostBuilder host, Action<ConfigureSerilogOptions>? optionsBuilder = default)
         {
             var opts = new ConfigureSerilogOptions();
-            optionsBuilder(opts);
+            optionsBuilder?.Invoke(opts);
 
             var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -48,10 +47,10 @@ namespace Microsoft.Extensions.Hosting
             return host.UseSerilog();
         }
 
-        public static void AddApplicationServices(this IServiceCollection services, Action<ApplicationServicesOptions> optionsBuilder)
+        public static void AddApplicationServices(this IServiceCollection services, Action<ApplicationServicesOptions>? optionsBuilder = default)
         {
             var opts = new ApplicationServicesOptions();
-            optionsBuilder(opts);
+            optionsBuilder?.Invoke(opts);
 
             services.AddApplicationDbContext(opts.PostgreSqlConnectionString);
 
@@ -100,26 +99,38 @@ namespace Microsoft.Extensions.Hosting
 
                 services.AddHealthChecks()
                     .AddNpgSql(opts.PostgreSqlConnectionString);
+            }
+            else
+            {
+                services.AddScoped(di => opts.User ?? new ClaimsPrincipal());
+            }
 
-                #region Quartz
-                // Quartz.NET is added to support OpenIddict token cleanup
-                // However, it is also usable for apps with Cron Job from a Worker Service
-                // When doing so, move this #region outside this `if (opts.AddWebAppOnlyServices) {...}` code block
-                // Then consider adding SQL database persistent storage for Quartz.NET:
-                // https://www.quartz-scheduler.net/documentation/quartz-3.x/quick-start.html#creating-and-initializing-database
-                // Do not use clustering mode of Quartz.NET unless you know what you're doing... (Just run in a single pod)
-                services.AddQuartz(options =>
-                {
-                    options.UseMicrosoftDependencyInjectionJobFactory();
-                    options.UseSimpleTypeLoader();
-                    options.UseInMemoryStore();
-                });
+            services.AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
+        }
 
-                services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
-                #endregion
+        public static void AddOpenIdConnectServer(this IServiceCollection services, Action<OpenIdConnectServerOptions>? optionsBuilder = default)
+        {
+            var opts = new OpenIdConnectServerOptions();
+            optionsBuilder?.Invoke(opts);
 
-                #region OpenIddict
-                services.AddOpenIddict()
+            #region Quartz
+            // Quartz.NET is added to support OpenIddict token cleanup
+            // However, it is also usable for apps with Cron Job from a Worker Service
+            // When doing so, just move Quartz service registration outside `AddOpenIdConnectServer`
+            // Then consider adding SQL database persistent storage for Quartz.NET:
+            // https://www.quartz-scheduler.net/documentation/quartz-3.x/quick-start.html#creating-and-initializing-database
+            // Do not use clustering mode of Quartz.NET unless you know what you're doing... (Just run in a single pod)
+            services.AddQuartz(options =>
+            {
+                options.UseMicrosoftDependencyInjectionJobFactory();
+                options.UseSimpleTypeLoader();
+                options.UseInMemoryStore();
+            });
+
+            services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+            #endregion
+
+            services.AddOpenIddict()
                     // Register the OpenIddict core components.
                     .AddCore(options =>
                     {
@@ -166,9 +177,9 @@ namespace Microsoft.Extensions.Hosting
                         // Register the signing and encryption credentials.
 
                         var signingRsa = RSA.Create();
-                        signingRsa.ImportRSAPrivateKey(Convert.FromBase64String(opts.OidcSigningKey), out _);
+                        signingRsa.ImportRSAPrivateKey(Convert.FromBase64String(opts.SigningKey), out _);
                         var encryptionRsa = RSA.Create();
-                        encryptionRsa.ImportRSAPrivateKey(Convert.FromBase64String(opts.OidcEncryptionKey), out _);
+                        encryptionRsa.ImportRSAPrivateKey(Convert.FromBase64String(opts.EncryptionKey), out _);
 
                         options.AddSigningKey(new RsaSecurityKey(signingRsa))
                             .AddEncryptionKey(new RsaSecurityKey(encryptionRsa));
@@ -213,23 +224,25 @@ namespace Microsoft.Extensions.Hosting
                         options.UseAspNetCore();
                         options.UseDataProtection();
                     });
-                #endregion
-            }
-            else
-            {
-                services.AddScoped(di => opts.User ?? new ClaimsPrincipal());
-            }
+        }
 
-            services.AddMediatR(typeof(CreateUserRequestHandler));
-            services.AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
+        public static void AddEntityFrameworkCoreAutomaticMigrations(this IServiceCollection services)
+        {
+            services.AddScoped<SetupDevelopmentEnvironmentService>();
+            services.AddHostedService<SetupDevelopmentEnvironmentHostedService>();
+        }
 
-            #region Kafka
+        public static void AddKafka(this IServiceCollection services, Action<KafkaServicesOptions>? optionsBuilder = default)
+        {
+            var opts = new KafkaServicesOptions();
+            optionsBuilder?.Invoke(opts);
+
             services.AddTransient(di =>
             {
                 return new ProducerConfig
                 {
-                    BootstrapServers = opts.KafkaServicesOptions.BootstrapServers,
-                    ClientId = opts.KafkaServicesOptions.ClientId
+                    BootstrapServers = opts.BootstrapServers,
+                    ClientId = opts.ClientId
                 };
             });
 
@@ -237,9 +250,9 @@ namespace Microsoft.Extensions.Hosting
             {
                 return new ConsumerConfig
                 {
-                    BootstrapServers = opts.KafkaServicesOptions.BootstrapServers,
-                    ClientId = opts.KafkaServicesOptions.ClientId,
-                    GroupId = opts.KafkaServicesOptions.ConsumerGroup,
+                    BootstrapServers = opts.BootstrapServers,
+                    ClientId = opts.ClientId,
+                    GroupId = opts.ConsumerGroup,
                     AutoOffsetReset = AutoOffsetReset.Earliest,
                     AllowAutoCreateTopics = true
                 };
@@ -256,13 +269,47 @@ namespace Microsoft.Extensions.Hosting
             });
 
             services.AddTransient<KafkaJsonProducer>();
-            #endregion
+        }
 
-            if (opts.EnableAutomaticMigration)
+        public static void AddMassTransitWithRabbitMq(this IServiceCollection services, Action<MassTransitRabbitMqOptions>? optionsBuilder = default)
+        {
+            var opts = new MassTransitRabbitMqOptions();
+            optionsBuilder?.Invoke(opts);
+
+            services.AddMassTransit(x =>
             {
-                services.AddScoped<SetupDevelopmentEnvironmentService>();
-                services.AddHostedService<SetupDevelopmentEnvironmentHostedService>();
-            }
+                x.SetKebabCaseEndpointNameFormatter();
+
+                // Add Consumers strictly for RabbitMQ
+                x.AddConsumersFromNamespaceContaining<DemoRabbitMessageConsumer>();
+
+                x.AddMediator(cfg =>
+                {
+                    // Add Consumers strictly for Mediator
+                    cfg.AddConsumersFromNamespaceContaining<CreateUserRequestHandler>();
+                });
+
+                if (opts.UseRabbitMQ)
+                {
+                    x.UsingRabbitMq((ctx, cfg) =>
+                    {
+                        cfg.Host(opts.Host, "/", h =>
+                        {
+                            h.Username(opts.Username);
+                            h.Password(opts.Password);
+                        });
+
+                        cfg.ConfigureEndpoints(ctx);
+                    });
+                }
+                else
+                {
+                    x.UsingInMemory((ctx, cfg) =>
+                    {
+                        cfg.ConfigureEndpoints(ctx);
+                    });
+                }
+            });
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Accelist.WebApiStandard.Extensions
+﻿namespace Microsoft.Extensions.Hosting
 {
     public static class OpenIdSettings
     {

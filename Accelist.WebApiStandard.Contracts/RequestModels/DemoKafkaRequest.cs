@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-namespace Accelist.WebApiStandard.Contracts.RequestModels
+﻿namespace Accelist.WebApiStandard.Contracts.RequestModels
 {
-    public class DemoKafkaRequest : IRequest
+    public class DemoKafkaRequest
     {
         public int A { set; get; }
 

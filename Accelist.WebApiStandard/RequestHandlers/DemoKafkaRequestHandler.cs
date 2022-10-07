@@ -1,15 +1,13 @@
 ﻿using Accelist.WebApiStandard.Contracts.RequestModels;
-using MediatR;
 
 namespace Accelist.WebApiStandard.RequestHandlers
 {
-    public class DemoKafkaRequestHandler : IRequestHandler<DemoKafkaRequest>
+    public class DemoKafkaRequestHandler : RequestHandlerBase<DemoKafkaRequest>
     {
-        public Task<Unit> Handle(DemoKafkaRequest request, CancellationToken cancellationToken)
+        public override Task Handle(DemoKafkaRequest request, CancellationToken cancellationToken)
         {
             Console.WriteLine(request.A + request.B);
-
-            return Unit.Task;
+            return Task.CompletedTask;
         }
     }
 }

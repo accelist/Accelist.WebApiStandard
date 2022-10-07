@@ -6,7 +6,7 @@ using System.Security.Claims;
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureSerilogForApplication(options =>
     {
-        options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.KafkaBackgroundService.log";
+        options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.KafkaWorker.log";
     })
     .ConfigureServices((ctx, services) =>
     {
@@ -17,10 +17,16 @@ IHost host = Host.CreateDefaultBuilder(args)
             var configuration = ctx.Configuration;
             options.PostgreSqlConnectionString = configuration.GetConnectionString("PostgreSql");
 
-            var id = new ClaimsIdentity("Accelist.WebApiStandard.KafkaBackgroundService");
+            var id = new ClaimsIdentity("Accelist.WebApiStandard.KafkaWorker");
             id.AddClaim(new Claim(ClaimTypes.Name, Environment.MachineName));
             options.User = new ClaimsPrincipal(id);
         });
+        // Add MassTransit just for Mediator functions
+        services.AddMassTransitWithRabbitMq(options =>
+        {
+            options.UseRabbitMQ = false;
+        });
+        services.AddKafka();
 
         // Add Kafka Consumers here:
         services.AddHostedService<DemoKafkaRequestConsumer>();

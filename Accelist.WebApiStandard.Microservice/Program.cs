@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+
 builder.Host.ConfigureSerilogForApplication(options =>
 {
     options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.Microservice.log";
@@ -20,14 +22,25 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppSettings>(builder.Configuration);
 builder.Services.AddApplicationServices(options =>
 {
-    var configuration = builder.Configuration;
     options.PostgreSqlConnectionString = configuration.GetConnectionString("PostgreSql");
-    options.EnableAutomaticMigration = builder.Environment.IsDevelopment();
     options.AddWebAppOnlyServices = true;
-    // Use api/generate-rsa-keys to get new random values 
-    options.OidcSigningKey = configuration["oidcSigningKey"];
-    options.OidcEncryptionKey = configuration["oidcEncryptionKey"];
+
 });
+builder.Services.AddMassTransitWithRabbitMq(options =>
+{
+    options.UseRabbitMQ = true;
+});
+builder.Services.AddKafka();
+builder.Services.AddOpenIdConnectServer(options => {
+    // Use api/generate-rsa-keys to get new random values 
+    options.SigningKey = configuration["oidcSigningKey"];
+    options.EncryptionKey = configuration["oidcEncryptionKey"];
+});
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddEntityFrameworkCoreAutomaticMigrations();
+}
 
 var app = builder.Build();
 
