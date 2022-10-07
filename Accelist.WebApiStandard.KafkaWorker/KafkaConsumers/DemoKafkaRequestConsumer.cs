@@ -9,7 +9,5 @@ namespace Accelist.WebApiStandard.KafkaWorker.KafkaConsumers
         public DemoKafkaRequestConsumer(ConsumerConfig config, ILogger<KafkaJsonConsumer<DemoKafkaRequest>> logger, IServiceScopeFactory serviceScopeFactory) : base(config, logger, serviceScopeFactory)
         {
         }
-
-        protected override string Topic => DemoKafkaRequest.Topic;
     }
 }

@@ -15,6 +15,11 @@ namespace Accelist.WebApiStandard.Services.Kafka
             _logger = logger;
         }
 
+        public Task<long?> ProduceAsync<T>(T data, CancellationToken cancellationToken) where T : class
+        {
+            return ProduceAsync(KafkaTopicNameTools.GetTopicNameFromType<T>(), data, cancellationToken);
+        }
+
         public async Task<long?> ProduceAsync(string topic, object data, CancellationToken cancellationToken)
         {
             try
@@ -36,6 +41,11 @@ namespace Accelist.WebApiStandard.Services.Kafka
                 _logger.LogError(ex, "An unhandled exception has occurred when producing message to Kafka for topic: {Topic}", topic);
                 return null;
             }
+        }
+
+        public void Produce<T>(T data) where T : class
+        {
+            Produce(KafkaTopicNameTools.GetTopicNameFromType<T>(), data);
         }
 
         public void Produce(string topic, object data)

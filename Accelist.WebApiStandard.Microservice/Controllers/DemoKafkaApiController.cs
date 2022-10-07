@@ -20,7 +20,7 @@ namespace Accelist.WebApiStandard.Microservice.Controllers
         [HttpPost]
         public async Task<ActionResult<long>> Post([FromBody] DemoKafkaRequest model, CancellationToken cancellationToken)
         {
-            var result = await _kafkaJsonProducer.ProduceAsync(DemoKafkaRequest.Topic, model, cancellationToken);
+            var result = await _kafkaJsonProducer.ProduceAsync(model, cancellationToken);
 
             if (result == null)
             {

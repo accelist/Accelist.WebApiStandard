@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Accelist.WebApiStandard.Services.Kafka
 {
-    public abstract class KafkaJsonConsumer<T> : BackgroundService
+    public abstract class KafkaJsonConsumer<T> : BackgroundService where T : class, IBaseRequest
     {
         private readonly IConsumer<Ignore, string> _consumer;
         private readonly ILogger<KafkaJsonConsumer<T>> _logger;
@@ -39,7 +39,7 @@ namespace Accelist.WebApiStandard.Services.Kafka
             return Task.CompletedTask;
         }
 
-        protected abstract string Topic { get; }
+        private string Topic => KafkaTopicNameTools.GetTopicNameFromType<T>();
 
         private async Task ConsumeJsonMessage(string? message, Offset offset, CancellationToken cancellationToken)
         {
