@@ -1,4 +1,4 @@
-using Accelist.WebApiStandard.KafkaBackgroundService.KafkaConsumers;
+using Accelist.WebApiStandard.KafkaWorker.KafkaConsumers;
 using Accelist.WebApiStandard.Services;
 using Serilog;
 using System.Security.Claims;

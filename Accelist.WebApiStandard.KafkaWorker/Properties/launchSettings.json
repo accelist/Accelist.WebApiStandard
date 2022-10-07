@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Accelist.WebApiStandard.KafkaBackgroundService": {
+    "Accelist.WebApiStandard.KafkaWorker": {
       "commandName": "Project",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"

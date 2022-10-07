@@ -2,7 +2,7 @@
 using Accelist.WebApiStandard.Services.Kafka;
 using Confluent.Kafka;
 
-namespace Accelist.WebApiStandard.KafkaBackgroundService.KafkaConsumers
+namespace Accelist.WebApiStandard.KafkaWorker.KafkaConsumers
 {
     public class DemoKafkaRequestConsumer : KafkaJsonConsumer<DemoKafkaRequest>
     {
