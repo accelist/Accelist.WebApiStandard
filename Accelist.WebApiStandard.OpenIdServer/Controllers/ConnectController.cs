@@ -3,6 +3,7 @@ using Accelist.WebApiStandard.Services;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +30,7 @@ namespace Accelist.WebApiStandard.Microservice.Controllers
             IOpenIddictScopeManager scopeManager,
             CustomSignInManager signInManager,
             UserManager<User> userManager,
-            IOpenIddictApplicationManager appManager,
-            ApplicationDbContext applicationDbContext)
+            IOpenIddictApplicationManager appManager)
         {
             _scopeManager = scopeManager;
             _signInManager = signInManager;

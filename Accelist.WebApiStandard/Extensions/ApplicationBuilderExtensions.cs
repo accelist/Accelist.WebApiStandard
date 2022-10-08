@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Validation.AspNetCore;
 using Quartz;
 using Serilog;
 using Serilog.Events;
@@ -250,6 +251,34 @@ namespace Microsoft.Extensions.Hosting
                         options.UseAspNetCore();
                         options.UseDataProtection();
                     });
+        }
+
+        public static void AddOpenIdConnectValidationAuthentication(this IServiceCollection services)
+        {
+            // https://github.com/openiddict/openiddict-samples/blob/dev/samples/Zirku/Zirku.Api1/Program.cs
+            services.AddOpenIddict().AddValidation(options =>
+            {
+                // Note: the validation handler uses OpenID Connect discovery
+                // to retrieve the address of the introspection endpoint.
+                options.SetIssuer("http://localhost:5051/");
+                
+                // Audience is assigned from Resources associated with the API Scope
+                options.AddAudiences("api-server");
+
+                // Configure the validation handler to use introspection and register the client
+                // credentials used when communicating with the remote introspection endpoint.
+                options.UseIntrospection()
+                       .SetClientId("api-server")
+                       .SetClientSecret("HelloWorld1!");
+
+                // Register the System.Net.Http integration.
+                options.UseSystemNetHttp();
+
+                // Register the ASP.NET Core host.
+                options.UseAspNetCore();
+            });
+
+            services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         }
 
         public static void AddEntityFrameworkCoreAutomaticMigrations(this IServiceCollection services)

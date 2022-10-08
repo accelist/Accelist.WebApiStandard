@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Accelist.WebApiStandard.Microservice": {
+    "Accelist.WebApiStandard.WebApi": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -8,7 +8,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5051"
+      "applicationUrl": "http://localhost:5052"
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -30,7 +30,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:65001",
+      "applicationUrl": "http://localhost:65052",
       "sslPort": 0
     }
   }

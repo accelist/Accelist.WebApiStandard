@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Accelist.WebApiStandard.Microservice.Controllers
+namespace Accelist.WebApiStandard.WebApi.V1
 {
-    [Route("api/demo-kafka")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class DemoKafkaApiController : ControllerBase
+    public class DemoKafkaController : ControllerBase
     {
         private readonly KafkaJsonProducer _kafkaJsonProducer;
 
-        public DemoKafkaApiController(KafkaJsonProducer kafkaJsonProducer)
+        public DemoKafkaController(KafkaJsonProducer kafkaJsonProducer)
         {
             _kafkaJsonProducer = kafkaJsonProducer;
         }
@@ -21,7 +21,6 @@ namespace Accelist.WebApiStandard.Microservice.Controllers
         public async Task<ActionResult<long>> Post([FromBody] DemoKafkaRequest model, CancellationToken cancellationToken)
         {
             var result = await _kafkaJsonProducer.ProduceAsync(model, cancellationToken);
-
             if (result == null)
             {
                 return Problem("Failed to send message to Kafka");

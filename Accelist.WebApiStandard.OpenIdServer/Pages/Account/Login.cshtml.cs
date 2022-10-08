@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Accelist.WebApiStandard.Microservice.Pages.Account
+namespace Accelist.WebApiStandard.OpenIdServer.Pages.Account
 {
     public class LoginModel : PageModel
     {

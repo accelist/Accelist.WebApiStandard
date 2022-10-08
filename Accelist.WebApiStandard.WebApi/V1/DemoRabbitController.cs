@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Accelist.WebApiStandard.Microservice.Controllers
+namespace Accelist.WebApiStandard.WebApi.V1
 {
-    [Route("api/demo-rabbit")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class DemoRabbitApiController : ControllerBase
+    public class DemoRabbitController : ControllerBase
     {
         private readonly IPublishEndpoint _publish;
 
-        public DemoRabbitApiController(IPublishEndpoint publish)
+        public DemoRabbitController(IPublishEndpoint publish)
         {
             _publish = publish;
         }

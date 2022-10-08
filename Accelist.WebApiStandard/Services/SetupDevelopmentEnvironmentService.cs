@@ -39,17 +39,10 @@ namespace Accelist.WebApiStandard.Services
             await AddAdministratorRole();
             await AddRoleToAdministratorUser(user, "Administrator");
 
-            await CreateBackEndApp(cancellationToken);
-            await CreateCmsScope(cancellationToken);
-            var appId = await CreateCmsApp(cancellationToken);
-            if (appId == null)
-            {
-                return;
-            }
-
+            await CreateApiServerApp(cancellationToken);
+            await CreateApiScope(cancellationToken);
+            await CreateCmsApp(cancellationToken);
             await CreateDemoClientApp(cancellationToken);
-            await CreateDemoServerApp(cancellationToken);
-            await CreateDemoScope(cancellationToken);
         }
 
         private async Task<User> AddUserAdministrator(CancellationToken cancellationToken)
@@ -72,9 +65,9 @@ namespace Accelist.WebApiStandard.Services
             return user;
         }
 
-        private async Task CreateDemoServerApp(CancellationToken cancellationToken)
+        private async Task CreateApiServerApp(CancellationToken cancellationToken)
         {
-            var exist = await _appManager.FindByClientIdAsync("demo-api-server", cancellationToken);
+            var exist = await _appManager.FindByClientIdAsync("api-server", cancellationToken);
             if (exist != null)
             {
                 return;
@@ -82,8 +75,8 @@ namespace Accelist.WebApiStandard.Services
 
             await _appManager.CreateAsync(new OpenIddictApplicationDescriptor
             {
-                ClientId = "demo-api-server",
-                DisplayName = "Demo API Server",
+                ClientId = "api-server",
+                DisplayName = "API Server",
                 Type = ClientTypes.Confidential,
                 ClientSecret = "HelloWorld1!",
                 Permissions =
@@ -96,9 +89,9 @@ namespace Accelist.WebApiStandard.Services
             }, cancellationToken);
         }
 
-        private async Task CreateDemoScope(CancellationToken cancellationToken)
+        private async Task CreateApiScope(CancellationToken cancellationToken)
         {
-            var exist = await _scopeManager.FindByNameAsync("demo-api", cancellationToken);
+            var exist = await _scopeManager.FindByNameAsync("api", cancellationToken);
             if (exist != null)
             {
                 return;
@@ -106,11 +99,11 @@ namespace Accelist.WebApiStandard.Services
 
             await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
             {
-                Name = "demo-api",
-                DisplayName = "Demo API",
+                Name = "api",
+                DisplayName = "API Scope",
                 Resources =
                 {
-                    "demo-api-server"
+                    "api-server"
                 }
             }, cancellationToken);
         }
@@ -135,50 +128,7 @@ namespace Accelist.WebApiStandard.Services
                     Permissions.Endpoints.Introspection,
                     Permissions.Endpoints.Revocation,
                     Permissions.GrantTypes.ClientCredentials,
-                    Permissions.Prefixes.Scope + "demo-api"
-                }
-            }, cancellationToken);
-        }
-
-        private async Task CreateBackEndApp(CancellationToken cancellationToken)
-        {
-            var exist = await _appManager.FindByClientIdAsync("api-server", cancellationToken);
-            if (exist != null)
-            {
-                return;
-            }
-
-            await _appManager.CreateAsync(new OpenIddictApplicationDescriptor
-            {
-                ClientId = "api-server",
-                DisplayName = "API Server (Back-End)",
-                Type = ClientTypes.Confidential,
-                ClientSecret = "HelloWorld1!",
-                Permissions =
-                {
-                    Permissions.Endpoints.Token,
-                    Permissions.Endpoints.Introspection,
-                    Permissions.Endpoints.Revocation,
-                    Permissions.GrantTypes.ClientCredentials
-                }
-            }, cancellationToken);
-        }
-
-        private async Task CreateCmsScope(CancellationToken cancellationToken)
-        {
-            var exist = await _scopeManager.FindByNameAsync("api:cms", cancellationToken);
-            if (exist != null)
-            {
-                return;
-            }
-
-            await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
-            {
-                Name = "api:cms",
-                DisplayName = "CMS API",
-                Resources =
-                {
-                    "api-server"
+                    Permissions.Prefixes.Scope + "api"
                 }
             }, cancellationToken);
         }
@@ -197,7 +147,7 @@ namespace Accelist.WebApiStandard.Services
                 DisplayName = "CMS (Front-End)",
                 RedirectUris = {
                     new Uri("http://localhost:3000/api/auth/callback/oidc"),
-                    new Uri("https://oauth.pstmn.io/v1/callback"),
+                    new Uri("https://oauth.pstmn.io/v1/callback")
                 },
                 Permissions =
                 {
@@ -212,7 +162,7 @@ namespace Accelist.WebApiStandard.Services
                     Permissions.Scopes.Roles,
                     Permissions.Scopes.Phone,
                     Permissions.Scopes.Address,
-                    Permissions.Prefixes.Scope + "api:cms"
+                    Permissions.Prefixes.Scope + "api"
                 },
                 Type = ClientTypes.Public
             }, cancellationToken);

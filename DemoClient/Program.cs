@@ -42,7 +42,7 @@ static async Task<string> GetTokenAsync(HttpClient client)
         Address = configuration.TokenEndpoint,
         ClientId = "demo-m2m",
         ClientSecret = "HelloWorld1!",
-        Scope = "demo-api"
+        Scope = "api"
     });
 
     if (response.IsError)
@@ -55,7 +55,7 @@ static async Task<string> GetTokenAsync(HttpClient client)
 
 static async Task<string> GetResourceAsync(HttpClient client, string token)
 {
-    using var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:5010/api/values");
+    using var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:5052/api/test");
     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
     using var response = await client.SendAsync(request);

@@ -8,16 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Accelist.WebApiStandard.Microservice.Controllers
+namespace Accelist.WebApiStandard.WebApi.V1
 {
-    [Route("api/v1/user")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class UserApiController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly IValidator<CreateUserRequest> _createUserRequestValidator;
 
-        public UserApiController(IMediator mediator, IValidator<CreateUserRequest> createUserRequestValidator)
+        public UserController(IMediator mediator, IValidator<CreateUserRequest> createUserRequestValidator)
         {
             _mediator = mediator;
             _createUserRequestValidator = createUserRequestValidator;

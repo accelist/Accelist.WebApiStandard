@@ -1,7 +1,11 @@
 using Accelist.WebApiStandard.Services;
+using Accelist.WebApiStandard.WebApi.AuthorizationPolicies;
+using ApiVersioning.Examples;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -11,17 +15,32 @@ var configuration = builder.Configuration;
 builder.WebHost.UseSentry();
 builder.Host.ConfigureSerilogWithSentry(options =>
 {
-    options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.Microservice.log";
+    options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.WebApi.log";
     options.WriteToSentry = true;
 });
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddRazorPages();
+builder.Services.AddApiVersioning(options =>
+{
+    // reporting api versions will return the headers
+    // "api-supported-versions" and "api-deprecated-versions"
+    options.ReportApiVersions = true;
+    options.AssumeDefaultVersionWhenUnspecified = true;
+}).AddMvc().AddApiExplorer(options =>
+{
+    // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+    // note: the specified format code will format the version as "'v'major[.minor][-status]"
+    options.GroupNameFormat = "'v'VVV";
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Add a custom operation filter which sets default values
+    options.OperationFilter<SwaggerDefaultValues>();
+});
 
 builder.Services.Configure<AppSettings>(builder.Configuration);
 builder.Services.AddApplicationServices(options =>
@@ -35,16 +54,16 @@ builder.Services.AddMassTransitWithRabbitMq(options =>
     options.UseRabbitMQ = true;
 });
 builder.Services.AddKafka();
-builder.Services.AddOpenIdConnectServer(options => {
-    // Use api/generate-rsa-keys to get new random values 
-    options.SigningKey = configuration["oidcSigningKey"];
-    options.EncryptionKey = configuration["oidcEncryptionKey"];
-});
-
-if (builder.Environment.IsDevelopment())
+builder.Services.AddOpenIdConnectValidationAuthentication();
+builder.Services.AddAuthorization(options =>
 {
-    builder.Services.AddEntityFrameworkCoreAutomaticMigrations();
-}
+    foreach (var policy in AuthorizationPolicyMap.Map)
+    {
+        options.AddPolicy(policy.Key, policy.Value);
+    }
+    // Set fallback policy to apply authorization policy to all unprotected API
+    // options.FallbackPolicy = AuthorizationPolicyMap.Map[AuthorizationPolicyNames.ScopeApi];
+});
 
 var app = builder.Build();
 
@@ -63,14 +82,31 @@ app.UseForwardedHeaders();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        var descriptions = app.DescribeApiVersions();
+
+        // build a swagger endpoint for each discovered API version
+        foreach (var description in descriptions)
+        {
+            var url = $"/swagger/{description.GroupName}/swagger.json";
+            var name = description.GroupName.ToUpperInvariant();
+            options.SwaggerEndpoint(url, name);
+        }
+
+        options.OAuthClientId("cms");
+        options.OAuthAppName("OpenID Connect");
+        options.OAuthScopeSeparator(" ");
+        options.OAuthUsePkce();
+    });
 }
 else
 {
-    app.UseExceptionHandler("/error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseExceptionHandler("/error");
 
 app.UseStaticFiles();
 
@@ -88,7 +124,6 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
 app.MapControllers();
 
 try

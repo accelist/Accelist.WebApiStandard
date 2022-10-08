@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 
-namespace Accelist.WebApiStandard.Microservice.Pages
+namespace Accelist.WebApiStandard.OpenIdServer.Pages
 {
     public class IndexModel : PageModel
     {
