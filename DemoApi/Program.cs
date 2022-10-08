@@ -11,7 +11,7 @@ builder.Services.AddOpenIddict().AddValidation(options =>
 {
     // Note: the validation handler uses OpenID Connect discovery
     // to retrieve the address of the introspection endpoint.
-    options.SetIssuer("http://localhost:5297/");
+    options.SetIssuer("http://localhost:5051/");
     options.AddAudiences("demo-api-server");
 
     // Configure the validation handler to use introspection and register the client

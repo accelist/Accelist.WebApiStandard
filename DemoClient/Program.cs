@@ -31,7 +31,7 @@ catch (HttpRequestException exception)
 static async Task<string> GetTokenAsync(HttpClient client)
 {
     // Retrieve the OpenIddict server configuration document containing the endpoint URLs.
-    var configuration = await client.GetDiscoveryDocumentAsync("http://localhost:5297");
+    var configuration = await client.GetDiscoveryDocumentAsync("http://localhost:5051");
     if (configuration.IsError)
     {
         throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");

@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Ryan Elian",
+    "classifications": [
+        "ASP.NET Core",
+        "Web API"
+    ],
+    "identity": "Accelist.WebApiStandard",
+    "sourceName": "Accelist.WebApiStandard",
+    "name": "Accelist Standard",
+    "shortName": "accelist-standard",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    }
+}
