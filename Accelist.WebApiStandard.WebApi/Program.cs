@@ -54,7 +54,13 @@ builder.Services.AddMassTransitWithRabbitMq(options =>
     options.UseRabbitMQ = true;
 });
 builder.Services.AddKafka();
-builder.Services.AddOpenIdConnectValidationAuthentication();
+builder.Services.AddOpenIdConnectValidationAuthentication(options =>
+{
+    options.Authority = "http://localhost:5051";
+    options.ClientId = "api-server";
+    options.ClientSecret = "HelloWorld!";
+    options.Audiences = new[] { "api-server" };
+});
 builder.Services.AddAuthorization(options =>
 {
     foreach (var policy in AuthorizationPolicyMap.Map)
@@ -93,11 +99,6 @@ if (app.Environment.IsDevelopment())
             var name = description.GroupName.ToUpperInvariant();
             options.SwaggerEndpoint(url, name);
         }
-
-        options.OAuthClientId("cms");
-        options.OAuthAppName("OpenID Connect");
-        options.OAuthScopeSeparator(" ");
-        options.OAuthUsePkce();
     });
 }
 else

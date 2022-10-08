@@ -1,4 +1,5 @@
 ﻿using Accelist.WebApiStandard.Entities;
+using Accelist.WebApiStandard.Extensions;
 using Accelist.WebApiStandard.RabbitMqConsumers;
 using Accelist.WebApiStandard.RequestHandlers;
 using Accelist.WebApiStandard.Services;
@@ -253,23 +254,26 @@ namespace Microsoft.Extensions.Hosting
                     });
         }
 
-        public static void AddOpenIdConnectValidationAuthentication(this IServiceCollection services)
+        public static void AddOpenIdConnectValidationAuthentication(this IServiceCollection services, Action<OpenIdValidationOptions>? optionsBuilder = default)
         {
+            var opts = new OpenIdValidationOptions();
+            optionsBuilder?.Invoke(opts);
+
             // https://github.com/openiddict/openiddict-samples/blob/dev/samples/Zirku/Zirku.Api1/Program.cs
             services.AddOpenIddict().AddValidation(options =>
             {
                 // Note: the validation handler uses OpenID Connect discovery
                 // to retrieve the address of the introspection endpoint.
-                options.SetIssuer("http://localhost:5051/");
+                options.SetIssuer(opts.Authority);
                 
                 // Audience is assigned from Resources associated with the API Scope
-                options.AddAudiences("api-server");
+                options.AddAudiences(opts.Audiences);
 
                 // Configure the validation handler to use introspection and register the client
                 // credentials used when communicating with the remote introspection endpoint.
                 options.UseIntrospection()
-                       .SetClientId("api-server")
-                       .SetClientSecret("HelloWorld1!");
+                       .SetClientId(opts.ClientId)
+                       .SetClientSecret(opts.ClientSecret);
 
                 // Register the System.Net.Http integration.
                 options.UseSystemNetHttp();
