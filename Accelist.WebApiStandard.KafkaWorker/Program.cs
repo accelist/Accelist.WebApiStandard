@@ -4,9 +4,19 @@ using Serilog;
 using System.Security.Claims;
 
 IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureSerilogForApplication(options =>
+    .ConfigureLogging((ctx, l) =>
+    {
+        // https://docs.sentry.io/platforms/dotnet/guides/extensions-logging/
+        // The ILoggingBuilder extension is useful when using a HostBuilder, also known as Generic host. 
+        // Bind the appsettings.json configuration to make the values available to the Sentry integration.
+        // Unfortunately, there are no Sentry integrations for IHostBuilder yet: https://github.com/getsentry/sentry-dotnet/issues/190
+        l.AddConfiguration(ctx.Configuration);
+        l.AddSentry();
+    })
+    .ConfigureSerilogWithSentry(options =>
     {
         options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.KafkaWorker.log";
+        options.WriteToSentry = true;
     })
     .ConfigureServices((ctx, services) =>
     {

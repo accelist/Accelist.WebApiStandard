@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Quartz;
 using Serilog;
 using Serilog.Events;
+using Serilog.Formatting.Compact;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -26,25 +27,50 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IHostBuilder ConfigureSerilogForApplication(this IHostBuilder host, Action<ConfigureSerilogOptions>? optionsBuilder = default)
+        public static IHostBuilder ConfigureSerilogWithSentry(this IHostBuilder host, Action<HostBuilderContext, ConfigureSerilogOptions>? optionsBuilder = default)
         {
-            var opts = new ConfigureSerilogOptions();
-            optionsBuilder?.Invoke(opts);
-
-            var loggerConfiguration = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                .Enrich.FromLogContext();
-
-            if (string.IsNullOrEmpty(opts.WriteErrorLogsToFile) == false)
+            return host.ConfigureServices((ctx, services) =>
             {
-                loggerConfiguration.WriteTo.File(opts.WriteErrorLogsToFile, LogEventLevel.Warning, rollingInterval: RollingInterval.Day);
-            }
+                var opts = new ConfigureSerilogOptions();
+                optionsBuilder?.Invoke(ctx, opts);
 
-            loggerConfiguration.WriteTo.Console();
+                var loggerConfiguration = new LoggerConfiguration()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                    .Enrich.FromLogContext();
 
-            Log.Logger = loggerConfiguration.CreateLogger();
-            return host.UseSerilog();
+                if (string.IsNullOrEmpty(opts.WriteErrorLogsToFile) == false)
+                {
+                    loggerConfiguration.WriteTo.File(opts.WriteErrorLogsToFile, LogEventLevel.Warning, rollingInterval: RollingInterval.Day);
+                }
+
+                if (opts.WriteJsonToConsoleLog)
+                {
+                    // required for log aggregation in Kubernetes cluster with container log collector
+                    // agent such as Fluent Bit to ElasticSearch + Kibana
+                    // https://docs.fluentbit.io/manual/installation/kubernetes
+                    loggerConfiguration.WriteTo.Console(new CompactJsonFormatter());
+                }
+                else
+                {
+                    loggerConfiguration.WriteTo.Console();
+                }
+
+                if (opts.WriteToSentry)
+                {
+                    loggerConfiguration.WriteTo.Sentry();
+                }
+
+                Log.Logger = loggerConfiguration.CreateLogger();
+            }).UseSerilog();
+        }
+
+        public static IHostBuilder ConfigureSerilogWithSentry(this IHostBuilder host, Action<ConfigureSerilogOptions>? optionsBuilder = default)
+        {
+            return host.ConfigureSerilogWithSentry((ctx, opts) =>
+            {
+                optionsBuilder?.Invoke(opts);
+            });
         }
 
         public static void AddApplicationServices(this IServiceCollection services, Action<ApplicationServicesOptions>? optionsBuilder = default)

@@ -6,9 +6,13 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-builder.Host.ConfigureSerilogForApplication(options =>
+// Sentry automatically loads appsettings.json and environment variables, binding to SentryAspNetCoreOptions
+// Don't forget to set TracesSampleRate to lower values (for example, 0.2) in Production environment!
+builder.WebHost.UseSentry();
+builder.Host.ConfigureSerilogWithSentry(options =>
 {
     options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.Microservice.log";
+    options.WriteToSentry = true;
 });
 
 // Add services to the container.
@@ -76,6 +80,10 @@ app.UseStaticFiles();
 app.UseSerilogRequestLogging();
 
 app.UseRouting();
+
+// https://docs.sentry.io/platforms/dotnet/guides/aspnetcore/performance/instrumentation/automatic-instrumentation
+app.UseSentryTracing();
+
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
