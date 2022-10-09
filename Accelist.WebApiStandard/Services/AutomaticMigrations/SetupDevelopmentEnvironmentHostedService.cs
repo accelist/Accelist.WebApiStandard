@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Accelist.WebApiStandard.Services
+namespace Accelist.WebApiStandard.Services.AutomaticMigrations
 {
     public class SetupDevelopmentEnvironmentHostedService : IHostedService
     {

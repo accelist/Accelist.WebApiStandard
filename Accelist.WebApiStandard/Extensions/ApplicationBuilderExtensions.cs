@@ -3,6 +3,7 @@ using Accelist.WebApiStandard.Extensions;
 using Accelist.WebApiStandard.RabbitMqConsumers;
 using Accelist.WebApiStandard.RequestHandlers;
 using Accelist.WebApiStandard.Services;
+using Accelist.WebApiStandard.Services.AutomaticMigrations;
 using Accelist.WebApiStandard.Services.Kafka;
 using Accelist.WebApiStandard.Validators;
 using Confluent.Kafka;

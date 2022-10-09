@@ -4,7 +4,7 @@ using OpenIddict.Abstractions;
 using Accelist.WebApiStandard.Entities;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace Accelist.WebApiStandard.Services
+namespace Accelist.WebApiStandard.Services.AutomaticMigrations
 {
     public class SetupDevelopmentEnvironmentService
     {
