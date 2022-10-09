@@ -10,6 +10,8 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
     [ApiController]
     public class DemoRabbitController : ControllerBase
     {
+        // When publishing from Mediator, use IBus instead of IPublishEndpoint
+        // IPublishEndpoint only works from the Controller level
         private readonly IPublishEndpoint _publish;
 
         public DemoRabbitController(IPublishEndpoint publish)

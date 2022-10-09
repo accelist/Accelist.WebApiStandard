@@ -1,15 +1,16 @@
 # Accelist Web API Standard
 This is the standard template to be used on all Accelist projects for ensuring our standardized web API request and response flow using the Model-Validation-Request-Response (MVRR) pattern.
 
-### Export as Template
+### Accelist Next.js Starter Jump Start
 
-In Visual Studio, `Project --> Export Template`
+Set `.env.development` or `.env.local` to these values:
 
-![Export Template](/docs/assets/images/export_template.png)
-
-Read more:
-- https://learn.microsoft.com/en-us/visualstudio/ide/how-to-create-project-templates?view=vs-2022
-- https://learn.microsoft.com/en-us/visualstudio/ide/how-to-create-multi-project-templates?view=vs-2022
+```
+BACKEND_API_HOST=http://localhost:5052
+OIDC_ISSUER=http://localhost:5051
+OIDC_CLIENT_ID=cms
+OIDC_SCOPE=openid profile email roles offline_access api
+``` 
 
 ## Architecture
 

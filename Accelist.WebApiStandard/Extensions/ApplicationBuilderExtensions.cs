@@ -265,7 +265,7 @@ namespace Microsoft.Extensions.Hosting
                 // Note: the validation handler uses OpenID Connect discovery
                 // to retrieve the address of the introspection endpoint.
                 options.SetIssuer(opts.Authority);
-                
+
                 // Audience is assigned from Resources associated with the API Scope
                 options.AddAudiences(opts.Audiences);
 
@@ -282,12 +282,13 @@ namespace Microsoft.Extensions.Hosting
                 options.UseAspNetCore();
             });
 
-            // Override defaults previously set by Identity
-            // https://github.com/dotnet/aspnetcore/blob/release/6.0/src/Identity/Core/src/IdentityServiceCollectionExtensions.cs#L45-L50
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                // Override defaults previously set by ASP.NET Identity
+                // https://github.com/dotnet/aspnetcore/blob/release/6.0/src/Identity/Core/src/IdentityServiceCollectionExtensions.cs#L45-L50
+                options.DefaultAuthenticateScheme = null;
+                options.DefaultChallengeScheme = null;
                 options.DefaultSignInScheme = null;
             });
         }
