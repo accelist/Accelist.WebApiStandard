@@ -2,7 +2,7 @@
 
 namespace Accelist.WebApiStandard.RequestHandlers
 {
-    public class DemoKafkaRequestHandler : RequestHandlerBase<DemoKafkaRequest>
+    public class DemoKafkaRequestHandler : MediatorRequestHandler<DemoKafkaRequest>
     {
         public override Task Handle(DemoKafkaRequest request, CancellationToken cancellationToken)
         {

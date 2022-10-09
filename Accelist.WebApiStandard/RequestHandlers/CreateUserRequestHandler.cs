@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace Accelist.WebApiStandard.RequestHandlers
 {
-    public class CreateUserRequestHandler : RequestHandlerBase<CreateUserRequest, CreateUserResponse>
+    public class CreateUserRequestHandler : MediatorRequestHandler<CreateUserRequest, CreateUserResponse>
     {
         private readonly UserManager<User> _userManager;
         private readonly ClaimsPrincipal _principal;

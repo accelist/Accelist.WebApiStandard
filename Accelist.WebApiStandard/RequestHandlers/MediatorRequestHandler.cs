@@ -8,7 +8,7 @@ namespace Accelist.WebApiStandard.RequestHandlers
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    public abstract class RequestHandlerBase<TRequest, TResponse> : IConsumer<TRequest>
+    public abstract class MediatorRequestHandler<TRequest, TResponse> : IConsumer<TRequest>
         where TRequest : class, Request<TResponse>
         where TResponse : class
     {
@@ -25,7 +25,7 @@ namespace Accelist.WebApiStandard.RequestHandlers
     /// Defines an async handler for a request with no (void) response.
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
-    public abstract class RequestHandlerBase<TRequest> : IConsumer<TRequest> where TRequest : class
+    public abstract class MediatorRequestHandler<TRequest> : IConsumer<TRequest> where TRequest : class
     {
         public Task Consume(ConsumeContext<TRequest> context)
         {
