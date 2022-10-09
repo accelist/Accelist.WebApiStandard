@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Accelist.WebApiStandard.Contracts\Accelist.WebApiStandard.Contracts.csproj" />
+    <ProjectReference Include="..\Accelist.WebApiStandard\Accelist.WebApiStandard.csproj" />
+  </ItemGroup>
+
+</Project>

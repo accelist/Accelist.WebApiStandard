@@ -41,7 +41,6 @@ builder.Services.AddMassTransitWithRabbitMq(options =>
     options.Username = "guest";
     options.Password = "guest";
 });
-builder.Services.AddKafka();
 builder.Services.AddOpenIdConnectValidationAuthentication(options =>
 {
     options.Authority = "http://localhost:5051";

@@ -346,12 +346,12 @@ namespace Microsoft.Extensions.Hosting
             {
                 x.SetKebabCaseEndpointNameFormatter();
 
-                // Add Consumers strictly for RabbitMQ
+                // Add Consumers strictly for RabbitMQ (out-of-process messaging)
                 x.AddConsumersFromNamespaceContaining<DemoRabbitMessageConsumer>();
 
                 x.AddMediator(cfg =>
                 {
-                    // Add Consumers strictly for Mediator
+                    // Add Consumers strictly for Mediator (in-process messaging)
                     cfg.AddConsumersFromNamespaceContaining<CreateUserRequestHandler>();
                 });
 

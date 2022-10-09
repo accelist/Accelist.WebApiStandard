@@ -14,14 +14,25 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
     [Authorize(AuthorizationPolicyNames.ScopeApi)]
     public class TestController : ControllerBase
     {
+        public class DataItem
+        {
+            public string Type { set; get; }
+
+            public string Value { set; get; }
+        }
+
         /// <summary>
-        /// Gets an array of string
+        /// Gets an array of user claim types and values.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<DataItem>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return User.Claims.Select(Q => new DataItem
+            {
+                Type = Q.Type,
+                Value = Q.Value
+            }).ToList();
         }
     }
 }
