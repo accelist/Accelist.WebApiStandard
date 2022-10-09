@@ -1,10 +1,7 @@
 using Accelist.WebApiStandard.Services;
-using Confluent.Kafka;
 using HealthChecks.UI.Client;
-using MassTransit;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
-using static System.Reflection.Metadata.BlobBuilder;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -28,10 +25,6 @@ builder.Services.AddApplicationServices(options =>
     options.PostgreSqlConnectionString = configuration.GetConnectionString("PostgreSql");
     options.AddWebAppOnlyServices = true;
 
-});
-builder.Services.AddMassTransitWithRabbitMq(options =>
-{
-    options.UseRabbitMQ = true;
 });
 builder.Services.AddOpenIdConnectServer(options => {
     // Use api/generate-rsa-keys to get new random values 
@@ -71,7 +64,7 @@ app.UseSerilogRequestLogging();
 app.UseRouting();
 app.UseCors(options =>
 {
-    // Allow token endpoint be hit from front-end web apps
+    // Allow token endpoint be hit from front-end web apps (e.g. JS with PKCE code flow)
     // https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-6.0#how-cors-works
     // CORS is NOT a security feature.
     // CORS is a W3C standard that allows a server to relax the same-origin policy. 

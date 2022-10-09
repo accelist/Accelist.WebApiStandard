@@ -282,7 +282,14 @@ namespace Microsoft.Extensions.Hosting
                 options.UseAspNetCore();
             });
 
-            services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+            // Override defaults previously set by Identity
+            // https://github.com/dotnet/aspnetcore/blob/release/6.0/src/Identity/Core/src/IdentityServiceCollectionExtensions.cs#L45-L50
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = null;
+            });
         }
 
         public static void AddEntityFrameworkCoreAutomaticMigrations(this IServiceCollection services)

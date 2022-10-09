@@ -37,13 +37,16 @@ builder.Services.AddApplicationServices(options =>
 builder.Services.AddMassTransitWithRabbitMq(options =>
 {
     options.UseRabbitMQ = true;
+    options.Host = "localhost";
+    options.Username = "guest";
+    options.Password = "guest";
 });
 builder.Services.AddKafka();
 builder.Services.AddOpenIdConnectValidationAuthentication(options =>
 {
     options.Authority = "http://localhost:5051";
     options.ClientId = "api-server";
-    options.ClientSecret = "HelloWorld!";
+    options.ClientSecret = "HelloWorld1!";
     options.Audiences = new[] { "api-server" };
 });
 builder.Services.AddAuthorization(options =>

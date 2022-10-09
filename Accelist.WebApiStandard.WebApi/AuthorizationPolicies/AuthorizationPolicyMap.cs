@@ -11,12 +11,12 @@ namespace Accelist.WebApiStandard.WebApi.AuthorizationPolicies
         {
             [AuthorizationPolicyNames.ScopeApi] = new AuthorizationPolicyBuilder()
                 .AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)
-                .RequireClaim(Claims.Scope, ApiScopeNames.Api)
+                .RequireClaim(Claims.Private.Scope, ApiScopeNames.Api)
                 .Build(),
 
             [AuthorizationPolicyNames.ScopeApiRoleAdministrator] = new AuthorizationPolicyBuilder()
                 .AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)
-                .RequireClaim(Claims.Scope, ApiScopeNames.Api)
+                .RequireClaim(Claims.Private.Scope, ApiScopeNames.Api)
                 .RequireRole(Claims.Role, RoleNames.Administrator)
                 .Build(),
         };
