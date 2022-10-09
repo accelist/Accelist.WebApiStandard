@@ -7,6 +7,9 @@ using System.Text;
 
 using var client = new HttpClient();
 
+// Machine-to-Machine Authentication or Client Credentials Flow
+// This scenario is for direct server-to-server communication (non-interactive / userless)
+
 try
 {
     var token = await GetTokenAsync(client);
