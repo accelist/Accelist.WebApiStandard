@@ -5,8 +5,13 @@ namespace Accelist.WebApiStandard.Entities
 {
     public class Blob : IHaveCreateOnlyAudit
     {
+        public Blob()
+        {
+            Id = Ulid.NewUlid().ToString();
+        }
+
         [StringLength(26)]
-        public string Id { get; set; } = "";
+        public string Id { get; set; }
 
         [StringLength(255)]
         public string FileName { get; set; } = "";
