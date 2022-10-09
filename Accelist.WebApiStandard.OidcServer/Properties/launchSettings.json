@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Accelist.WebApiStandard.OpenIdServer": {
+    "Accelist.WebApiStandard.OidcServer": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

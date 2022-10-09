@@ -11,7 +11,7 @@ var configuration = builder.Configuration;
 builder.WebHost.UseSentry();
 builder.Host.ConfigureSerilogWithSentry(options =>
 {
-    options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.OpenIdServer.log";
+    options.WriteErrorLogsToFile = "/Logs/Accelist.WebApiStandard.OidcServer.log";
     options.WriteToSentry = true;
 });
 

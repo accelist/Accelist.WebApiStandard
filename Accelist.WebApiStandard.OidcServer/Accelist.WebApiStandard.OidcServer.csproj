@@ -20,14 +20,4 @@
     <ProjectReference Include="..\Accelist.WebApiStandard\Accelist.WebApiStandard.csproj" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <ResolveStaticWebAssetsInputsDependsOn>RemoveIdentityAssets</ResolveStaticWebAssetsInputsDependsOn>
-  </PropertyGroup>
-
-  <Target Name="RemoveIdentityAssets">
-    <ItemGroup>
-      <StaticWebAsset Remove="@(StaticWebAsset)" Condition="%(SourceId) == 'Microsoft.AspNetCore.Identity.UI'" />
-    </ItemGroup>
-  </Target>
-
 </Project>
