@@ -7,10 +7,33 @@
     ],
     "identity": "Accelist.WebApiStandard",
     "sourceName": "Accelist.WebApiStandard",
-    "name": "Accelist Standard",
+    "name": "Accelist Standard Web Application",
     "shortName": "accelist-standard",
     "tags": {
         "language": "C#",
         "type": "project"
-    }
+    },
+    "sources": [
+        {
+            "source": "./",
+            "target": "./",
+            "include": [
+                "**/*"
+            ],
+            "exclude": [
+                "**/[Bb]in/**",
+                "**/[Oo]bj/**",
+                "**/.template.config/**",
+                "**/*.filelist",
+                "**/*.user",
+                "**/*.lock.json",
+                "docs/**",
+                "**/.git/**",
+                "**/.nuspec",
+                ".vs/**",
+                "**/node_modules/**",
+                "**/README.md"
+            ]
+        }
+    ]
 }

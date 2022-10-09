@@ -9,7 +9,7 @@ namespace Accelist.WebApiStandard.Entities.MigrationsDesigner
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=accelist_web_api_standard;Username=postgres;Password=HelloWorld!");
+            optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=Accelist.WebApiStandard;Username=postgres;Password=HelloWorld!");
             optionsBuilder.UseOpenIddict();
 
             return new ApplicationDbContext(optionsBuilder.Options);
