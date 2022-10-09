@@ -1,6 +1,6 @@
 using Accelist.WebApiStandard.Services;
 using Accelist.WebApiStandard.WebApi.AuthorizationPolicies;
-using ApiVersioning.Examples;
+using Accelist.WebApiStandard.WebApi.SwaggerIntegrations;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -21,26 +21,11 @@ builder.Host.ConfigureSerilogWithSentry(options =>
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddApiVersioning(options =>
-{
-    // reporting api versions will return the headers
-    // "api-supported-versions" and "api-deprecated-versions"
-    options.ReportApiVersions = true;
-    options.AssumeDefaultVersionWhenUnspecified = true;
-}).AddMvc().AddApiExplorer(options =>
-{
-    // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
-    // note: the specified format code will format the version as "'v'major[.minor][-status]"
-    options.GroupNameFormat = "'v'VVV";
-});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddSwaggerGen(options =>
-{
-    // Add a custom operation filter which sets default values
-    options.OperationFilter<SwaggerDefaultValues>();
-});
+builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<AppSettings>(builder.Configuration);
 builder.Services.AddApplicationServices(options =>
@@ -88,18 +73,7 @@ app.UseForwardedHeaders();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        var descriptions = app.DescribeApiVersions();
-
-        // build a swagger endpoint for each discovered API version
-        foreach (var description in descriptions)
-        {
-            var url = $"/swagger/{description.GroupName}/swagger.json";
-            var name = description.GroupName.ToUpperInvariant();
-            options.SwaggerEndpoint(url, name);
-        }
-    });
+    app.UseSwaggerUI();
 }
 else
 {
