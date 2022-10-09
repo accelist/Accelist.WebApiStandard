@@ -1,5 +1,4 @@
-﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Accelist.WebApiStandard.WebApi.Controllers
 {
@@ -8,7 +7,6 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
     /// </summary>
     [ApiController]
     [ApiExplorerSettings(IgnoreApi = true)]
-    [ApiVersionNeutral]
     public class ErrorController : ControllerBase
     {
         /// <summary>
