@@ -36,7 +36,11 @@ IHost host = Host.CreateDefaultBuilder(args)
         {
             options.UseRabbitMQ = false;
         });
-        services.AddKafka();
+        services.AddKafkaServices(options =>
+        {
+            options.BootstrapServers = "localhost:9092";
+            options.ConsumerGroup = "group-1";
+        });
 
         // Add Kafka Consumers here:
         services.AddHostedService<DemoKafkaRequestConsumer>();

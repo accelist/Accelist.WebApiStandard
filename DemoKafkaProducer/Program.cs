@@ -1,5 +1,5 @@
 ﻿using Accelist.WebApiStandard.Contracts.RequestModels;
-using Accelist.WebApiStandard.Services.Kafka;
+using Accelist.WebApiStandard.KafkaServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,11 +12,9 @@ services.AddLogging(options =>
 
 // Guide: How to integrate with Apache Kafka / Redpanda in ASP.NET Core Web API
 // Step 1: AddKafka to service collection
-services.AddKafka(options =>
+services.AddKafkaServices(options =>
 {
     options.BootstrapServers = "localhost:9092";
-    options.ClientId = Environment.MachineName;
-    options.ConsumerGroup = "group-1";
 });
 
 var di = services.BuildServiceProvider();

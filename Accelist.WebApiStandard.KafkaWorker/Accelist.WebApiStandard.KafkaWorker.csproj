@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Accelist.WebApiStandard.Contracts\Accelist.WebApiStandard.Contracts.csproj" />
     <ProjectReference Include="..\Accelist.WebApiStandard.Entities\Accelist.WebApiStandard.Entities.csproj" />
+    <ProjectReference Include="..\Accelist.WebApiStandard.KafkaServices\Accelist.WebApiStandard.KafkaServices.csproj" />
     <ProjectReference Include="..\Accelist.WebApiStandard\Accelist.WebApiStandard.csproj" />
   </ItemGroup>
 </Project>

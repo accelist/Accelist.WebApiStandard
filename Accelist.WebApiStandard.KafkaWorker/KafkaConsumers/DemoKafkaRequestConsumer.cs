@@ -1,5 +1,5 @@
 ﻿using Accelist.WebApiStandard.Contracts.RequestModels;
-using Accelist.WebApiStandard.Services.Kafka;
+using Accelist.WebApiStandard.KafkaServices;
 using Confluent.Kafka;
 
 namespace Accelist.WebApiStandard.KafkaWorker.KafkaConsumers

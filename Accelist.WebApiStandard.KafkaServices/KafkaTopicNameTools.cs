@@ -1,4 +1,4 @@
-﻿namespace Accelist.WebApiStandard.Services.Kafka
+﻿namespace Accelist.WebApiStandard.KafkaServices
 {
     public static class KafkaTopicNameTools
     {

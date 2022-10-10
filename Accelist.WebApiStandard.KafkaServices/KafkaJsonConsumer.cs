@@ -1,12 +1,11 @@
 using Confluent.Kafka;
-using FluentValidation;
 using MassTransit.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace Accelist.WebApiStandard.Services.Kafka
+namespace Accelist.WebApiStandard.KafkaServices
 {
     public abstract class KafkaJsonConsumer<T> : BackgroundService where T : class
     {
@@ -59,18 +58,6 @@ namespace Accelist.WebApiStandard.Services.Kafka
             _logger.LogInformation("Received topic {Topic} message offset: {Offset}", Topic, offset);
 
             using var scope = _serviceScopeFactory.CreateScope();
-
-            var validator = scope.ServiceProvider.GetService<IValidator<T>>();
-            if (validator != null)
-            {
-                var result = await validator.ValidateAsync(data, cancellationToken);
-                if (result == null || result.IsValid == false)
-                {
-                    _logger.LogWarning("Failed to validate message: {ValidationResult}. Topic: {Topic} Offset: {Offset}", result, Topic, offset);
-                    return;
-                }
-            }
-
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
             await mediator.Send(data, cancellationToken);
         }

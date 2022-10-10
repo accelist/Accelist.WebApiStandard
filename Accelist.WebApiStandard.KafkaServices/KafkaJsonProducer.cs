@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace Accelist.WebApiStandard.Services.Kafka
+namespace Accelist.WebApiStandard.KafkaServices
 {
     public class KafkaJsonProducer
     {
