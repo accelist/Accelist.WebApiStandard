@@ -31,11 +31,6 @@ IHost host = Host.CreateDefaultBuilder(args)
             id.AddClaim(new Claim(ClaimTypes.Name, Environment.MachineName));
             options.User = new ClaimsPrincipal(id);
         });
-        // Add MassTransit just for Mediator functions
-        services.AddMassTransitWithRabbitMq(options =>
-        {
-            options.UseRabbitMQ = false;
-        });
         services.AddKafkaServices(options =>
         {
             options.BootstrapServers = "localhost:9092";

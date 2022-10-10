@@ -1,12 +1,13 @@
 ﻿using Accelist.WebApiStandard.Contracts.RequestModels;
 using Accelist.WebApiStandard.Contracts.ResponseModels;
 using Accelist.WebApiStandard.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace Accelist.WebApiStandard.RequestHandlers
 {
-    public class CreateUserRequestHandler : MediatorRequestHandler<CreateUserRequest, CreateUserResponse>
+    public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, CreateUserResponse>
     {
         private readonly UserManager<User> _userManager;
         private readonly ClaimsPrincipal _principal;
@@ -17,7 +18,7 @@ namespace Accelist.WebApiStandard.RequestHandlers
             _principal = principal;
         }
 
-        public override async Task<CreateUserResponse> Handle(CreateUserRequest request, CancellationToken cancellationToken)
+        public async Task<CreateUserResponse> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
             var user = new User
             {

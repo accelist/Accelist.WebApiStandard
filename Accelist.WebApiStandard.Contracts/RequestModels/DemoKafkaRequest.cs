@@ -1,6 +1,8 @@
-﻿namespace Accelist.WebApiStandard.Contracts.RequestModels
+﻿using MediatR;
+
+namespace Accelist.WebApiStandard.Contracts.RequestModels
 {
-    public class DemoKafkaRequest
+    public class DemoKafkaRequest : IRequest
     {
         public int A { set; get; }
 

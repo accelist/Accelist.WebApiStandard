@@ -7,6 +7,7 @@ using Accelist.WebApiStandard.Services.AutomaticMigrations;
 using Accelist.WebApiStandard.Validators;
 using FluentValidation;
 using MassTransit;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
@@ -133,6 +134,7 @@ namespace Microsoft.Extensions.Hosting
             }
 
             services.AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
+            services.AddMediatR(typeof(CreateUserRequestHandler));
         }
 
         public static void AddOpenIdConnectServer(this IServiceCollection services, Action<OpenIdConnectServerOptions>? optionsBuilder = default)
@@ -309,12 +311,6 @@ namespace Microsoft.Extensions.Hosting
 
                 // Add Consumers strictly for RabbitMQ (out-of-process messaging)
                 x.AddConsumersFromNamespaceContaining<DemoRabbitMessageConsumer>();
-
-                x.AddMediator(cfg =>
-                {
-                    // Add Consumers strictly for Mediator (in-process messaging)
-                    cfg.AddConsumersFromNamespaceContaining<CreateUserRequestHandler>();
-                });
 
                 if (opts.UseRabbitMQ)
                 {

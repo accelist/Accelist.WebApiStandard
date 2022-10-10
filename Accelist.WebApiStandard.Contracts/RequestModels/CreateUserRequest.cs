@@ -1,9 +1,9 @@
 ﻿using Accelist.WebApiStandard.Contracts.ResponseModels;
-using MassTransit.Mediator;
+using MediatR;
 
 namespace Accelist.WebApiStandard.Contracts.RequestModels
 {
-    public class CreateUserRequest : Request<CreateUserResponse>
+    public class CreateUserRequest : IRequest<CreateUserResponse>
     {
         public string GivenName { set; get; } = "";
 

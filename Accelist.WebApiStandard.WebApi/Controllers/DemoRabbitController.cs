@@ -1,4 +1,4 @@
-﻿using Accelist.WebApiStandard.Contracts.RequestModels;
+﻿using Accelist.WebApiStandard.Contracts.RabbitMqMessages;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 

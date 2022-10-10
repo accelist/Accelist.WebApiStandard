@@ -1,12 +1,22 @@
 ﻿using Accelist.WebApiStandard.Contracts.RequestModels;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Accelist.WebApiStandard.RequestHandlers
 {
-    public class DemoKafkaRequestHandler : MediatorRequestHandler<DemoKafkaRequest>
+    public class DemoKafkaRequestHandler : AsyncRequestHandler<DemoKafkaRequest>
     {
-        public override Task Handle(DemoKafkaRequest request, CancellationToken cancellationToken)
+        private readonly ILogger<DemoKafkaRequestHandler> _logger;
+
+        public DemoKafkaRequestHandler(ILogger<DemoKafkaRequestHandler> logger)
         {
-            Console.WriteLine(request.A + request.B);
+            _logger = logger;
+        }
+
+        protected override Task Handle(DemoKafkaRequest request, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Hello from Kafka! {A} + {B} = {C}", request.A, request.B, request.A + request.B);
+
             return Task.CompletedTask;
         }
     }

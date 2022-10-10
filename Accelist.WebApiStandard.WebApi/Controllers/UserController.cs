@@ -2,8 +2,7 @@
 using Accelist.WebApiStandard.Contracts.ResponseModels;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using MassTransit;
-using MassTransit.Mediator;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -52,7 +51,7 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
                 return ValidationProblem(ModelState);
             }
 
-            var response = await _mediator.SendRequest(model);
+            var response = await _mediator.Send(model, cancellationToken);
             return response;
         }
 
