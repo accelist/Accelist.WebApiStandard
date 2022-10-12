@@ -17,6 +17,7 @@ namespace Accelist.WebApiStandard.RequestHandlers
 
         public IAsyncEnumerable<ListUserResponse> Handle(ListUserRequest request, CancellationToken cancellationToken)
         {
+            // GivenName is not unique, therefore table must also be sorted by Id which is unique
             var query = _db.Paginate<User>().With(Q => Q.GivenName, Q => Q.Id, request.PreviousGivenName, request.PreviousId);
 
             if (string.IsNullOrWhiteSpace(request.Search) == false)
@@ -24,16 +25,13 @@ namespace Accelist.WebApiStandard.RequestHandlers
                 query = query.Where(Q => Q.SearchVector.Matches(request.Search));
             }
 
-            // GivenName is not unique, sort also by Id which is unique
-            query = query.OrderBy(Q => Q.GivenName).ThenBy(Q => Q.Id).Take(10);
-
             var result = query.Select(Q => new ListUserResponse
             {
                 Id = Q.Id,
                 GivenName = Q.GivenName,
                 FamilyName = Q.FamilyName,
                 Email = Q.Email,
-            }).AsAsyncEnumerable();
+            }).Take(10).AsAsyncEnumerable();
 
             return result;
         }

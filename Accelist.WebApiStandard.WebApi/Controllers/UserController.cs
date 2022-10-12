@@ -27,6 +27,7 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
         public IAsyncEnumerable<ListUserResponse> Get(string? search, string? previousId, string? previousGivenName)
         {
             // https://swr.vercel.app/docs/pagination#useswrinfinite
+            // https://swr.vercel.app/docs/pagination#example-2-cursor-or-offset-based-paginated-api
             // useSwrInfinite allows getting previous page data to be used as next page query
 
             var response = _mediator.CreateStream(new ListUserRequest
