@@ -94,8 +94,9 @@ namespace Microsoft.EntityFrameworkCore
                 return _dbSet.AsNoTracking().OrderBy(column1Selector);
             }
 
+            var comparer = descending ? '<' : '>';
             var column1Name = GetColumnName(column1Selector);
-            var sql = $"SELECT * FROM {GetTableFullName()} WHERE {PaginatePostgreSqlDbContextExtensions.Quote(column1Name)} > {{0}}";
+            var sql = $"SELECT * FROM {GetTableFullName()} WHERE {PaginatePostgreSqlDbContextExtensions.Quote(column1Name)} {comparer} {{0}}";
 
             var query = _dbSet.FromSqlRaw(sql, lastColumn1).AsNoTracking();
             if (descending)
@@ -139,12 +140,13 @@ namespace Microsoft.EntityFrameworkCore
                     .ThenBy(column2Selector);
             }
 
+            var comparer = descending ? '<' : '>';
             var column1Name = GetColumnName(column1Selector);
             var column2Name = GetColumnName(column2Selector);
 
             // https://learn.microsoft.com/en-us/ef/core/querying/pagination#multiple-pagination-keys
             // https://github.com/dotnet/efcore/issues/26822
-            var sql = $"SELECT * FROM {GetTableFullName()} WHERE ({PaginatePostgreSqlDbContextExtensions.Quote(column1Name)}, {PaginatePostgreSqlDbContextExtensions.Quote(column2Name)}) > ({{0}}, {{1}})";
+            var sql = $"SELECT * FROM {GetTableFullName()} WHERE ({PaginatePostgreSqlDbContextExtensions.Quote(column1Name)}, {PaginatePostgreSqlDbContextExtensions.Quote(column2Name)}) {comparer} ({{0}}, {{1}})";
 
             var query = _dbSet.FromSqlRaw(sql, lastColumn1, lastColumn2).AsNoTracking();
             if (descending)
