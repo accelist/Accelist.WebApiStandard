@@ -5,24 +5,6 @@ using System.Reflection;
 namespace Microsoft.EntityFrameworkCore
 {
     /// <summary>
-    /// Moderate performance boost by separating this static method into another static class. 
-    /// Read more: https://learn.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2015/code-quality/ca1822-mark-members-as-static?view=vs-2015&redirectedfrom=MSDN
-    /// </summary>
-    internal static class StringQuoter
-    {
-        /// <summary>
-        /// Put quote around the string. Used to place quotation marks around identifiers used in PostgreSQL raw SQL query. 
-        /// Read more: <br></br> https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        internal static string Quote(string value)
-        {
-            return $"\"{value}\"";
-        }
-    }
-
-    /// <summary>
     /// Contains methods for querying <typeparamref name="TEntity"/> using keyset pagination logic
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
@@ -57,10 +39,10 @@ namespace Microsoft.EntityFrameworkCore
             // https://www.npgsql.org/efcore/modeling/table-column-naming.html
             if (_schema != null)
             {
-                return $"{StringQuoter.Quote(_schema)}.{StringQuoter.Quote(_tableName)}";
+                return $"{PaginatePostgreSqlDbContextExtensions.Quote(_schema)}.{PaginatePostgreSqlDbContextExtensions.Quote(_tableName)}";
             }
 
-            return StringQuoter.Quote(_tableName);
+            return PaginatePostgreSqlDbContextExtensions.Quote(_tableName);
         }
 
         /// <summary>
@@ -113,7 +95,7 @@ namespace Microsoft.EntityFrameworkCore
             }
 
             var column1Name = GetColumnName(column1Selector);
-            var sql = $"SELECT * FROM {GetTableFullName()} WHERE {StringQuoter.Quote(column1Name)} > {{0}}";
+            var sql = $"SELECT * FROM {GetTableFullName()} WHERE {PaginatePostgreSqlDbContextExtensions.Quote(column1Name)} > {{0}}";
 
             var query = _dbSet.FromSqlRaw(sql, lastColumn1).AsNoTracking();
             if (descending)
@@ -162,7 +144,7 @@ namespace Microsoft.EntityFrameworkCore
 
             // https://learn.microsoft.com/en-us/ef/core/querying/pagination#multiple-pagination-keys
             // https://github.com/dotnet/efcore/issues/26822
-            var sql = $"SELECT * FROM {GetTableFullName()} WHERE ({StringQuoter.Quote(column1Name)}, {StringQuoter.Quote(column2Name)}) > ({{0}}, {{1}})";
+            var sql = $"SELECT * FROM {GetTableFullName()} WHERE ({PaginatePostgreSqlDbContextExtensions.Quote(column1Name)}, {PaginatePostgreSqlDbContextExtensions.Quote(column2Name)}) > ({{0}}, {{1}})";
 
             var query = _dbSet.FromSqlRaw(sql, lastColumn1, lastColumn2).AsNoTracking();
             if (descending)
@@ -179,7 +161,7 @@ namespace Microsoft.EntityFrameworkCore
     public static class PaginatePostgreSqlDbContextExtensions
     {
         /// <summary>
-        /// Begin pagination query for Entity <typeparamref name="TEntity"/>
+        /// Begin pagination query for entity <typeparamref name="TEntity"/>
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="dbContext"></param>
@@ -191,6 +173,17 @@ namespace Microsoft.EntityFrameworkCore
                 throw new InvalidOperationException($"Cannot get entity type for {typeof(TEntity).Name}");
 
             return new DbSetPagination<TEntity>(dbContext.Set<TEntity>(), entityType);
+        }
+
+        /// <summary>
+        /// Put quote around the string. Used to place quotation marks around identifiers used in PostgreSQL raw SQL query. 
+        /// Read more: <br></br> https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        internal static string Quote(string value)
+        {
+            return $"\"{value}\"";
         }
     }
 }
