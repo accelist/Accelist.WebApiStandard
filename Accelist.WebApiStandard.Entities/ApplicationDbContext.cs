@@ -22,6 +22,17 @@ namespace Accelist.WebApiStandard.Entities
             builder.Entity<OpenIddictEntityFrameworkCoreAuthorization>().Property(Q => Q.Id).HasMaxLength(36);
             builder.Entity<OpenIddictEntityFrameworkCoreScope>().Property(Q => Q.Id).HasMaxLength(36);
             builder.Entity<OpenIddictEntityFrameworkCoreToken>().Property(Q => Q.Id).HasMaxLength(36);
+
+            // D:\VS\Accelist.WebApiStandard\Accelist.WebApiStandard\RequestHandlers\ListUserRequestHandler.cs
+            builder.Entity<User>().HasIndex(Q => new { Q.GivenName, Q.Id });
+
+            // https://www.npgsql.org/efcore/mapping/full-text-search.html#method-1-tsvector-column
+            builder.Entity<User>().HasGeneratedTsVectorColumn(
+                    p => p.SearchVector,
+                    "english",  // Text search config
+                    p => new { p.GivenName, p.FamilyName, p.Email })  // Included properties
+                .HasIndex(p => p.SearchVector)
+                .HasMethod("GIN"); // Index method on the search vector (GIN or GIST)
         }
 
         public DbSet<Blob> Blobs => Set<Blob>();

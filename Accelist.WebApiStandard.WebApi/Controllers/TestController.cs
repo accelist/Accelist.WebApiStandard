@@ -16,9 +16,9 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
     {
         public class DataItem
         {
-            public string Type { set; get; }
+            public string Type { set; get; } = "";
 
-            public string Value { set; get; }
+            public string Value { set; get; } = "";
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 using Accelist.WebApiStandard.Services;
+using Accelist.WebApiStandard.WebApi;
 using Accelist.WebApiStandard.WebApi.AuthorizationPolicies;
-using Accelist.WebApiStandard.WebApi.SwaggerIntegrations;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;

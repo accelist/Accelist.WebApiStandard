@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using Accelist.WebApiStandard.Entities.EntityDescriptors;
+using NpgsqlTypes;
 
 namespace Accelist.WebApiStandard.Entities
 {
@@ -43,6 +44,8 @@ namespace Accelist.WebApiStandard.Entities
         public string Country { set; get; } = "";
 
         public bool IsEnabled { set; get; }
+
+        public NpgsqlTsVector SearchVector { get; set; } = null!;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
