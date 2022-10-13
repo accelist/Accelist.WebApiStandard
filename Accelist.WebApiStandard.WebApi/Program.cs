@@ -68,10 +68,6 @@ app.MapHealthChecks("/healthz", new HealthCheckOptions
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
-// Configure the HTTP request pipeline.
-app.UseForwardedHeaders();
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
