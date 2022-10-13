@@ -126,7 +126,7 @@ namespace Microsoft.Extensions.Hosting
                 });
 
                 services.AddHealthChecks()
-                    .AddNpgSql(opts.PostgreSqlConnectionString);
+                    .AddDbContextCheck<ApplicationDbContext>();
             }
             else
             {
