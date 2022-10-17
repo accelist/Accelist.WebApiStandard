@@ -25,18 +25,13 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
 
         // GET: api/<UserApiController>
         [HttpGet]
-        public IAsyncEnumerable<ListUserResponse> Get(string? search, string? previousId, string? previousGivenName)
+        public IAsyncEnumerable<ListUserResponse> Get([FromQuery] ListUserRequest model)
         {
             // https://swr.vercel.app/docs/pagination#useswrinfinite
             // https://swr.vercel.app/docs/pagination#example-2-cursor-or-offset-based-paginated-api
             // useSwrInfinite allows getting previous page data to be used as next page query
 
-            var response = _mediator.CreateStream(new ListUserRequest
-            {
-                Search = search,
-                PreviousGivenName = previousGivenName,
-                PreviousId = previousId
-            });
+            var response = _mediator.CreateStream(model);
             return response;
         }
 

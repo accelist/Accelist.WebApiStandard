@@ -5,7 +5,11 @@ namespace Accelist.WebApiStandard.Contracts.RequestModels.ManageUsers
 {
     public class ListUserRequest : IStreamRequest<ListUserResponse>
     {
-        public string? Search { set; get; }
+        public string? GivenName { set; get; }
+
+        public string? FamilyName { set; get; }
+
+        public string? Email { set; get; }
 
         /// <summary>
         /// Prefer keyset pagination instead of offset pagination: <br></br>

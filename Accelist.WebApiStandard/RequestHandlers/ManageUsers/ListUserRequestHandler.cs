@@ -20,11 +20,19 @@ namespace Accelist.WebApiStandard.RequestHandlers.ManageUsers
             // GivenName is not unique, therefore table must also be sorted by Id which is unique
             var query = _db.Paginate<User>().With(Q => Q.GivenName, Q => Q.Id, request.PreviousGivenName, request.PreviousId);
 
-            if (string.IsNullOrWhiteSpace(request.Search) == false)
+            if (request.GivenName.HasValue())
             {
-                query = query.Where(Q => EF.Functions.TrigramsAreWordSimilar(request.Search, Q.Email)
-                    || EF.Functions.TrigramsAreWordSimilar(request.Search, Q.GivenName)
-                    || EF.Functions.TrigramsAreWordSimilar(request.Search, Q.FamilyName));
+                query = query.Where(Q => EF.Functions.TrigramsAreStrictWordSimilar(request.GivenName, Q.GivenName));
+            }
+
+            if (request.FamilyName.HasValue())
+            {
+                query = query.Where(Q => EF.Functions.TrigramsAreStrictWordSimilar(request.FamilyName, Q.FamilyName));
+            }
+
+            if (request.Email.HasValue())
+            {
+                query = query.Where(Q => EF.Functions.TrigramsAreStrictWordSimilar(request.Email, Q.Email));
             }
 
             var result = query.Select(Q => new ListUserResponse
