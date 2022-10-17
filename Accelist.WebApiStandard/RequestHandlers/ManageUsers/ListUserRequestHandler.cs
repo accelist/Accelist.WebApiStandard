@@ -22,9 +22,9 @@ namespace Accelist.WebApiStandard.RequestHandlers.ManageUsers
 
             if (string.IsNullOrWhiteSpace(request.Search) == false)
             {
-                query = query.Where(Q => EF.Functions.TrigramsAreSimilar(Q.Email, request.Search)
-                    || EF.Functions.TrigramsAreSimilar(Q.GivenName, request.Search)
-                    || EF.Functions.TrigramsAreSimilar(Q.FamilyName, request.Search));
+                query = query.Where(Q => EF.Functions.TrigramsAreWordSimilar(request.Search, Q.Email)
+                    || EF.Functions.TrigramsAreWordSimilar(request.Search, Q.GivenName)
+                    || EF.Functions.TrigramsAreWordSimilar(request.Search, Q.FamilyName));
             }
 
             var result = query.Select(Q => new ListUserResponse
