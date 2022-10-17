@@ -1,10 +1,10 @@
-﻿using Accelist.WebApiStandard.Contracts.RequestModels;
-using Accelist.WebApiStandard.Contracts.ResponseModels;
+﻿using Accelist.WebApiStandard.Contracts.RequestModels.ManageUsers;
+using Accelist.WebApiStandard.Contracts.ResponseModels.ManageUsers;
 using Accelist.WebApiStandard.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Accelist.WebApiStandard.RequestHandlers
+namespace Accelist.WebApiStandard.RequestHandlers.ManageUsers
 {
     public class ListUserRequestHandler : IStreamRequestHandler<ListUserRequest, ListUserResponse>
     {
@@ -22,7 +22,9 @@ namespace Accelist.WebApiStandard.RequestHandlers
 
             if (string.IsNullOrWhiteSpace(request.Search) == false)
             {
-                query = query.Where(Q => Q.SearchVector.Matches(request.Search));
+                query = query.Where(Q => EF.Functions.TrigramsAreSimilar(Q.Email, request.Search)
+                    || EF.Functions.TrigramsAreSimilar(Q.GivenName, request.Search)
+                    || EF.Functions.TrigramsAreSimilar(Q.FamilyName, request.Search));
             }
 
             var result = query.Select(Q => new ListUserResponse

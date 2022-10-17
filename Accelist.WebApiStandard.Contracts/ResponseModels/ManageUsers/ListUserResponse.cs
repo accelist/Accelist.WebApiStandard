@@ -1,4 +1,4 @@
-﻿namespace Accelist.WebApiStandard.Contracts.ResponseModels
+﻿namespace Accelist.WebApiStandard.Contracts.ResponseModels.ManageUsers
 {
     public class ListUserResponse
     {

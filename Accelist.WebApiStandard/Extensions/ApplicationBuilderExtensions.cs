@@ -1,10 +1,10 @@
 ﻿using Accelist.WebApiStandard.Entities;
 using Accelist.WebApiStandard.Extensions;
 using Accelist.WebApiStandard.RabbitMqConsumers;
-using Accelist.WebApiStandard.RequestHandlers;
+using Accelist.WebApiStandard.RequestHandlers.ManageUsers;
 using Accelist.WebApiStandard.Services;
 using Accelist.WebApiStandard.Services.AutomaticMigrations;
-using Accelist.WebApiStandard.Validators;
+using Accelist.WebApiStandard.Validators.ManageUsers;
 using FluentValidation;
 using MassTransit;
 using MediatR;
@@ -41,7 +41,7 @@ namespace Microsoft.Extensions.Hosting
                     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                     .Enrich.FromLogContext();
 
-                if (string.IsNullOrEmpty(opts.WriteErrorLogsToFile) == false)
+                if (opts.WriteErrorLogsToFile.HasValue())
                 {
                     loggerConfiguration.WriteTo.File(opts.WriteErrorLogsToFile, LogEventLevel.Warning, rollingInterval: RollingInterval.Day);
                 }

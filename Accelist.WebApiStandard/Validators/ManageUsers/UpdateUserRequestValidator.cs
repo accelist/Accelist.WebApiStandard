@@ -1,15 +1,15 @@
-﻿using Accelist.WebApiStandard.Contracts.RequestModels;
+﻿using Accelist.WebApiStandard.Contracts.RequestModels.ManageUsers;
 using Accelist.WebApiStandard.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
-namespace Accelist.WebApiStandard.Validators
+namespace Accelist.WebApiStandard.Validators.ManageUsers
 {
-    public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
+    public class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>
     {
         private readonly UserManager<User> _userManager;
 
-        public CreateUserRequestValidator(UserManager<User> userManager)
+        public UpdateUserRequestValidator(UserManager<User> userManager)
         {
             _userManager = userManager;
 
@@ -18,18 +18,19 @@ namespace Accelist.WebApiStandard.Validators
             RuleFor(Q => Q.FamilyName).NotEmpty().MaximumLength(64);
 
             RuleFor(Q => Q.Email).NotEmpty().MaximumLength(256).EmailAddress()
-                .MustAsync(NotDuplicateEmail).WithMessage("Email is already registered.");
+                .MustAsync(NotDuplicateEmail).WithMessage("Email is already registered");
 
-            RuleFor(Q => Q.Password).NotEmpty()
-                .MustAsync(HaveValidPassword).WithMessage("Password is not strong enough.");
-
-            RuleFor(Q => Q.VerifyPassword).NotEmpty().Equal(Q => Q.Password);
+            When(Q => Q.Password.HasValue(), () =>
+            {
+                RuleFor(Q => Q.Password).MustAsync(HaveValidPassword).WithMessage("Password is not strong enough");
+            });
         }
 
-        private async Task<bool> NotDuplicateEmail(string email, CancellationToken cancellationToken)
+        private async Task<bool> NotDuplicateEmail(UpdateUserRequest request, string email, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return (user == null);
+            // validation fails when email is used by other user
+            return (user == null) || (user.Id == request.Id);
         }
 
         private async Task<bool> HaveValidPassword(string password, CancellationToken cancellationToken)

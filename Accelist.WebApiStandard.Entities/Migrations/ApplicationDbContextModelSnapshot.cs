@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using NpgsqlTypes;
 
 #nullable disable
 
@@ -21,6 +20,7 @@ namespace Accelist.WebApiStandard.Entities.Migrations
                 .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pg_trgm");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Accelist.WebApiStandard.Entities.Blob", b =>
@@ -167,13 +167,6 @@ namespace Accelist.WebApiStandard.Entities.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
-                    b.Property<NpgsqlTsVector>("SearchVector")
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("tsvector")
-                        .HasAnnotation("Npgsql:TsVectorConfig", "english")
-                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "GivenName", "FamilyName", "Email" });
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -198,16 +191,27 @@ namespace Accelist.WebApiStandard.Entities.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Email"), "GIN");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Email"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex("FamilyName");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("FamilyName"), "GIN");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("FamilyName"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex("GivenName");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("GivenName"), "GIN");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("GivenName"), new[] { "gin_trgm_ops" });
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("SearchVector");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
                     b.HasIndex("GivenName", "Id");
 

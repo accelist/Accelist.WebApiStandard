@@ -1,6 +1,7 @@
 using Accelist.WebApiStandard.Services;
 using Accelist.WebApiStandard.WebApi;
 using Accelist.WebApiStandard.WebApi.AuthorizationPolicies;
+using Accelist.WebApiStandard.WebApi.Controllers;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -32,7 +33,6 @@ builder.Services.AddApplicationServices(options =>
 {
     options.PostgreSqlConnectionString = configuration.GetConnectionString("PostgreSql");
     options.AddWebAppOnlyServices = true;
-
 });
 builder.Services.AddMassTransitWithRabbitMq(options =>
 {
@@ -41,6 +41,7 @@ builder.Services.AddMassTransitWithRabbitMq(options =>
     options.Username = "guest";
     options.Password = "guest";
 });
+builder.Services.AddAutoMapper(typeof(UserController.UpdateUserApiModelAutoMapper));
 builder.Services.AddOpenIdConnectValidationAuthentication(options =>
 {
     options.Authority = "http://localhost:5051";

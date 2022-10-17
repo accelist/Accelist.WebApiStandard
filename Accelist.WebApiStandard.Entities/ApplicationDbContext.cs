@@ -7,6 +7,13 @@ namespace Accelist.WebApiStandard.Entities
 {
     public class ApplicationDbContext : IdentityDbContext<User>, IDataProtectionKeyContext
     {
+        /// <summary>
+        /// https://www.postgresql.org/docs/current/pgtrgm.html
+        /// </summary>
+        private const string PgTrigramExtension = "pg_trgm";
+
+        private const string PgTrigramIndexOperators = "gin_trgm_ops";
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
@@ -14,6 +21,8 @@ namespace Accelist.WebApiStandard.Entities
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.HasPostgresExtension(PgTrigramExtension);
 
             // Guid max length
             builder.Entity<User>().Property(Q => Q.Id).HasMaxLength(36);
@@ -26,13 +35,17 @@ namespace Accelist.WebApiStandard.Entities
             // D:\VS\Accelist.WebApiStandard\Accelist.WebApiStandard\RequestHandlers\ListUserRequestHandler.cs
             builder.Entity<User>().HasIndex(Q => new { Q.GivenName, Q.Id });
 
-            // https://www.npgsql.org/efcore/mapping/full-text-search.html#method-1-tsvector-column
-            builder.Entity<User>().HasGeneratedTsVectorColumn(
-                    p => p.SearchVector,
-                    "english",  // Text search config
-                    p => new { p.GivenName, p.FamilyName, p.Email })  // Included properties
-                .HasIndex(p => p.SearchVector)
-                .HasMethod("GIN"); // Index method on the search vector (GIN or GIST)
+            builder.Entity<User>().HasIndex(Q => Q.GivenName)
+                .HasMethod("GIN")
+                .HasOperators(PgTrigramIndexOperators);
+
+            builder.Entity<User>().HasIndex(Q => Q.FamilyName)
+                .HasMethod("GIN")
+                .HasOperators(PgTrigramIndexOperators);
+
+            builder.Entity<User>().HasIndex(Q => Q.Email)
+                .HasMethod("GIN")
+                .HasOperators(PgTrigramIndexOperators);
         }
 
         public DbSet<Blob> Blobs => Set<Blob>();

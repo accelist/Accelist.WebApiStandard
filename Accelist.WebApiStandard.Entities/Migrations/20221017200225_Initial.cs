@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using NpgsqlTypes;
 
 #nullable disable
 
@@ -11,6 +10,9 @@ namespace Accelist.WebApiStandard.Entities.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -41,9 +43,6 @@ namespace Accelist.WebApiStandard.Entities.Migrations
                     PostalCode = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
                     Country = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
                     IsEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
-                        .Annotation("Npgsql:TsVectorConfig", "english")
-                        .Annotation("Npgsql:TsVectorProperties", new[] { "GivenName", "FamilyName", "Email" }),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -338,15 +337,30 @@ namespace Accelist.WebApiStandard.Entities.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Email",
+                table: "AspNetUsers",
+                column: "Email")
+                .Annotation("Npgsql:IndexMethod", "GIN")
+                .Annotation("Npgsql:IndexOperators", new[] { "gin_trgm_ops" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_FamilyName",
+                table: "AspNetUsers",
+                column: "FamilyName")
+                .Annotation("Npgsql:IndexMethod", "GIN")
+                .Annotation("Npgsql:IndexOperators", new[] { "gin_trgm_ops" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_GivenName",
+                table: "AspNetUsers",
+                column: "GivenName")
+                .Annotation("Npgsql:IndexMethod", "GIN")
+                .Annotation("Npgsql:IndexOperators", new[] { "gin_trgm_ops" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_GivenName_Id",
                 table: "AspNetUsers",
                 columns: new[] { "GivenName", "Id" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_SearchVector",
-                table: "AspNetUsers",
-                column: "SearchVector")
-                .Annotation("Npgsql:IndexMethod", "GIN");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
