@@ -12,8 +12,6 @@ namespace Accelist.WebApiStandard.Entities
         /// </summary>
         private const string PgTrigramExtension = "pg_trgm";
 
-        private const string PgTrigramIndexOperator = "gin_trgm_ops";
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
@@ -35,17 +33,9 @@ namespace Accelist.WebApiStandard.Entities
             // D:\VS\Accelist.WebApiStandard\Accelist.WebApiStandard\RequestHandlers\ListUserRequestHandler.cs
             builder.Entity<User>().HasIndex(Q => new { Q.GivenName, Q.Id });
 
-            builder.Entity<User>().HasIndex(Q => Q.GivenName)
-                .HasMethod("GIN")
-                .HasOperators(PgTrigramIndexOperator);
-
-            builder.Entity<User>().HasIndex(Q => Q.FamilyName)
-                .HasMethod("GIN")
-                .HasOperators(PgTrigramIndexOperator);
-
-            builder.Entity<User>().HasIndex(Q => Q.Email)
-                .HasMethod("GIN")
-                .HasOperators(PgTrigramIndexOperator);
+            builder.Entity<User>().HasTrigramIndex(Q => Q.GivenName);
+            builder.Entity<User>().HasTrigramIndex(Q => Q.FamilyName);
+            builder.Entity<User>().HasTrigramIndex(Q => Q.Email);
         }
 
         public DbSet<Blob> Blobs => Set<Blob>();
