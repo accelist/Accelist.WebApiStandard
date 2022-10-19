@@ -6,7 +6,7 @@ namespace Microsoft.EntityFrameworkCore
     /// <summary>
     /// Contains methods for configuring trigram index in an Entity Framework Core model builder.
     /// </summary>
-    public static class HasTrigramIndexExtension
+    public static class HasPostgreSqlTrigramIndexExtensions
     {
         /// <summary>
         /// GIN index operator class for pg_trgm
