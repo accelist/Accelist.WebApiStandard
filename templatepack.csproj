@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.0.1-preview.1</PackageVersion>
     <PackageId>Accelist.WebApiStandard.Templates</PackageId>
     <Title>Accelist Web API Standard Templates</Title>
     <Authors>Ryan Elian</Authors>
