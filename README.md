@@ -98,14 +98,26 @@ graph TD
 
 ![Clean Architecture](/docs/clean_architecture.png)
 
-The order of development should be done from top to bottom:
+**The order of development should be done from top to bottom:**
 
-- Entities maps directly to the database objects and are defined according to business / user needs. The Functional Specification Document (FSD) / UI Design designed by the project Analyst MUST ALWAYS be referenced when developing the Entities to avoid missing data. Changes to the entities should be EXTREMELY RARE as it forms the foundation of the system.
+- **Entities maps directly to the database objects and are defined according to business / user needs.** The Functional Specification Document (FSD) / UI Design designed by the project Analyst MUST ALWAYS be referenced when developing the Entities to avoid missing data. Changes to the entities should be EXTREMELY RARE as it forms the foundation of the system.
 
-- Contracts are collection of classes used in MediatR Request + Response pattern or RabbitMQ Messages. Contracts do not have logic. Contracts are equivalent to Input-Output interface of a system. MediatR Request is similar to a method signature of a normal C# class, except that it is not a method, but only a simple class. MediatR Request can be said as an in-process message, unlike RabbitMQ which is an out-of-process messaging system. Changes to the contracts should be RARE as it defines the logic interface of the system.
+- **Contracts are collection of classes used in MediatR Request + Response pattern or RabbitMQ Messages. Contracts do not have logic. Contracts are equivalent to Input-Output interface of a system.** MediatR Request is similar to a method signature of a normal C# class, except that it is not a method, but only a simple class. MediatR Request can be said as an in-process message, unlike RabbitMQ which is an out-of-process messaging system. Changes to the contracts should be RARE as it defines the logic interface of the system.
 
-- "The Engine", "The CORE", or "The Nucleus" project consists of the actual implementation of the app logic. This is where the "Process" part is developed against the Input-Output declared in the Contracts project. "The Engine" project usually contains the following processes: Request Handlers for MediatR Request-Response, RabbitMQ Message Consumers (using MassTransit), Validators for Request or Message (using FluentValidation). Other reusable services and extension methods may also be placed in this project. In essence, the logic of the whole app can be developed in this project without touching any Web API. Changes to "The Engine" should be COMMON because it defines the logic of the system itself.
+- **"The Engine", "The Core", or "The Nucleus" project consists of the actual implementation of the app logic. This is where the "Process" part is developed against the Input-Output declared in the Contracts project.** "The Engine" project usually contains the following processes: Request Handlers for MediatR Request-Response, RabbitMQ Message Consumers (using MassTransit), Validators for Request or Message (using FluentValidation). Other reusable services and extension methods may also be placed in this project. In essence, the logic of the whole app can be developed in this project without touching any Web API. Changes to "The Engine" should be COMMON because it defines the logic of the system itself.
 
-- "The App" is where "The Engine" is mapped against the interface of the system, which is usually JSON Web API. "The App" is the project that is actually run-able and interactive to the developer. A developer can run "The App" and provide it with inputs. The inputs will then be mapped against an API Model and routed into an API Controller. The API Controller is responsible for authorization, validation, constructing a MediatR Request or a RabbitMQ Message, and sending / publishing them correctly. "The App" will then return the correct response which is needed by the UI layer. Changes to Web API should be COMMON because it follows UI requirement but already-published APIs MUST NOT change to maintain backward-compatibility to existing Front-End Apps.
+- **"The App" is where "The Engine" is mapped against the interface of the system, which is usually JSON Web API.** "The App" is the project that is actually run-able and interactive to the developer. A developer can run "The App" and provide it with inputs. The inputs will then be mapped against an API Model and routed into an API Controller. The API Controller is responsible for authorization, validation, constructing a MediatR Request or a RabbitMQ Message, and sending / publishing them correctly. "The App" will then return the correct response which is needed by the UI layer. Changes to Web API should be COMMON because it follows UI requirement but already-published APIs MUST NOT change to maintain backward-compatibility to existing Front-End Apps.
 
-- "The UI" is the Front-End Web App developed with Next.js or Mobile Apps which interacts with the Web API developed. "The UI" is usually developed according to the FSD / UI Design. Therefore, the Web API must comply to the requirements of "The UI". Changes to "The UI" should be FREQUENT because UI requirement follows evolving business requirements or Change Requests (CR).
+- **"The UI" is the Front-End Web App developed with Next.js or Mobile Apps which interacts with the Web API previously developed.** "The UI" is usually developed according to the FSD / UI Design. Therefore, the Web API must comply to the requirements of "The UI". Changes to "The UI" should be FREQUENT because UI requirement follows evolving business requirements or Change Requests (CR).
+
+**This Clean Architecture concept complies to the Microservice Design Pattern for Web API by Microsoft:**
+
+https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-application-layer-implementation-web-api
+
+#### Web API CQRS Pattern with Mediator (In-Process Messaging)
+
+![CQRS with Mediator](/docs/mediator-cqrs-microservice.png)
+
+#### Web API CQRS Pattern with Message Bus (Out-of-Process Messaging)
+
+![CQRS with Message Bus](/docs/add-ha-message-queue.png)
