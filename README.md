@@ -6,8 +6,13 @@ ASP.NET Core project templates designed with Clean Architecture, featuring CQRS 
 
 ### Add NuGet Source
 
-```
-dotnet nuget add source --username johnsmith --password GITHUB_PERSONAL_ACCESS_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/accelist/index.json"
+```ps1
+dotnet nuget add source `
+    --username johnsmith `
+    --password GITHUB_PERSONAL_ACCESS_TOKEN `
+    --store-password-in-clear-text `
+    --name github `
+    "https://nuget.pkg.github.com/accelist/index.json"
 ```
 
 > [GitHub Packages only supports authentication using a personal access token (classic)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
