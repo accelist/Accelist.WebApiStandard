@@ -61,29 +61,38 @@ OIDC_SCOPE=openid profile email roles offline_access api
 
 ## MARVEL Software Development Pattern
 
+![MARVEL Pattern](/docs/marvel-pattern.png)
+
+### Developer Adventure: Developing Web API
+
 ```mermaid
+%%{init: {'flowchart' : {'curve' : 'linear'}}}%%
 graph TD
-    START -->|JSON Request| A(API Controller)
-    A -->|Authoriation and Enrichment| R{Route Param?}
-    R -->|Exist| B(MediatR Request)
-    R -->|Invalid param / <br/> resource does not exist| R404("return NotFound()")
+    START --> |JSON Request| A(API Controller)
+    A --> |Authorization and Enrichment| R{Route Param?}
+    R --> |Exist| B(MediatR Request)
+    R --> |Invalid param / <br/> resource does not exist| R404("return NotFound()")
     R404 --> |404 Not Found| BACK
     B --> C{Validate<br/>Request?}
-    C -->|Yes| D1(FluentValidation)
-    C -->|No| F2
+    C --> |Yes| D1(FluentValidation)
+    C --> |No| F2
     D1 --> E{Valid?}
-    E -->|Invalid| F400("validationResult.AddToModelState(ModelState)")
-    E -->|Valid| F2
+    E --> |Invalid| F400("validationResult.AddToModelState(ModelState)")
+    E --> |Valid| F2
     F400 --> G400("return ValidationProblem(ModelState)")
-    G400 -->|400 Bad Request| BACK
+    G400 --> |400 Bad Request| BACK
     F2("Mediator.Send(request)") --> G{Error?}
-    G --> |No|H{Complex logic?}
-    G --> |Yes|H500{Can validate<br/>to prevent error?}
-    H --> |Yes.<br/>Chain logic to<br/>another MediatR Request!|B
+    G --> |No| H{Complex logic?}
+    G --> |Yes| H500{Can validate<br/>to prevent error?}
+    H --> |Yes.<br/>Chain logic to<br/>another MediatR Request!| B
     H --> |No|I200(return API response)
-    I200 --> |200 Success| BACK
+    I200 --> J200{Long running task?}
+    J200 --> |Yes| KRabbit("Publish to Message Bus")
+    KRabbit --> L200
+    J200 --> |No| L200
+    L200("return API Response") --> |200 OK|BACK
     H500 --> |Yes, go back <br/> to validation design!|C
     H500 --> |No, impossible to validate...|I500("throw / return Problem(...)")
-    I500 --> |500 Internal Server Error| BACK(return from API Controller)
-    BACK --> |JSON Response| END
+    I500 --> |500 Internal Server Error| BACK
+    BACK(return from API Controller) --> |JSON Response| END
 ```
