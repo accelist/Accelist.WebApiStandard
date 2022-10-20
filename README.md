@@ -59,20 +59,31 @@ OIDC_CLIENT_ID=cms
 OIDC_SCOPE=openid profile email roles offline_access api
 ``` 
 
-## Architecture
+## MARVEL Software Development Pattern
 
-### MVRR Pattern Diagram
-![MVRR Pattern](/docs/assets/images/mvrr-pattern.png)
-
-### MVRR Flow Diagram
-![MVRR Flow](/docs/assets/images/mvrr-flow.png)
-
-## Installation
-### Developer Tools
-To begin the development of the application, you must install these following softwares:
-| Name | Version | Type | DL Link | Notes |
-| ---- | ------- | ---- | ------- | ----- |
-| .NET | 6 | SDK | https://dotnet.microsoft.com/en-us/download/dotnet/6.0 |  |
-| Visual Studio | 2022 | IDE | | (Optional) you could use other IDE or code editor. |
-| Visual Studio Code | | IDE | | (Optional) you could use other IDE or code editor. |
-| Docker | | Container | | (Optional) for test and run the app along with Jaeger. |
+```mermaid
+graph TD
+    START -->|JSON Request| A(API Controller)
+    A -->|Authoriation and Enrichment| R{Route Param?}
+    R -->|Exist| B(MediatR Request)
+    R -->|Invalid param / <br/> resource does not exist| R404("return NotFound()")
+    R404 --> |404 Not Found| BACK
+    B --> C{Validate<br/>Request?}
+    C -->|Yes| D1(FluentValidation)
+    C -->|No| F2
+    D1 --> E{Valid?}
+    E -->|Invalid| F400("validationResult.AddToModelState(ModelState)")
+    E -->|Valid| F2
+    F400 --> G400("return ValidationProblem(ModelState)")
+    G400 -->|400 Bad Request| BACK
+    F2("Mediator.Send(request)") --> G{Error?}
+    G --> |No|H{Complex logic?}
+    G --> |Yes|H500{Can validate<br/>to prevent<br/>error?}
+    H --> |Yes|B
+    H --> |No|I200(return API response)
+    I200 --> |200 Success| BACK
+    H500 --> |Yes, go back|C
+    H500 --> |No, impossible to validate|I500("throw / return Problem(...)")
+    I500 --> |500 Internal Server Error| BACK(return from API Controller)
+    BACK --> |JSON Response| END
+```
