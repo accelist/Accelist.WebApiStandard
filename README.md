@@ -100,7 +100,7 @@ graph TD
 
 The order of development should be done from top to bottom:
 
-- Entities are defined according to business / user needs. The Functional Specification Document (FSD) / UI Design designed by the project Analyst MUST ALWAYS be referenced when developing the Entities to avoid missing data. Changes to the entities should be EXTREMELY RARE as it forms the foundation of the system.
+- Entities maps directly to the database objects and are defined according to business / user needs. The Functional Specification Document (FSD) / UI Design designed by the project Analyst MUST ALWAYS be referenced when developing the Entities to avoid missing data. Changes to the entities should be EXTREMELY RARE as it forms the foundation of the system.
 
 - Contracts are collection of classes used in MediatR Request + Response pattern or RabbitMQ Messages. Contracts do not have logic. Contracts are equivalent to Input-Output interface of a system. MediatR Request is similar to a method signature of a normal C# class, except that it is not a method, but only a simple class. MediatR Request can be said as an in-process message, unlike RabbitMQ which is an out-of-process messaging system. Changes to the contracts should be RARE as it defines the logic interface of the system.
 
