@@ -69,8 +69,8 @@ OIDC_SCOPE=openid profile email roles offline_access api
 %%{init: {'flowchart' : {'curve' : 'linear'}}}%%
 graph TD
     START --> |JSON Request| A(API Controller)
-    A --> |Authorization and Enrichment| R{Route Param?}
-    R --> |Exist| B(MediatR Request)
+    A --> |Authorization and Enrichment| R{Route<br/>Param?}
+    R --> |Exist| B(Create MediatR Request)
     R --> |Invalid param / <br/> resource does not exist| R404("return NotFound()")
     R404 --> |404 Not Found| BACK
     B --> C{Validate<br/>Request?}
@@ -88,7 +88,7 @@ graph TD
     KRabbit --> L200
     H --> |No| L200
     L200("return API Response") --> |200 OK|BACK
-    H500 --> |Yes, go back <br/> to validation design!|C
+    H500 --> |Yes.<br/>Go back to<br/>validation design!|C
     H500 --> |No, impossible to validate...|I500("throw / return Problem(...)")
     I500 --> |500 Internal Server Error| BACK
     BACK(return from API Controller) --> |JSON Response| END
