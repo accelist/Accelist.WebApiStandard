@@ -5,8 +5,6 @@
 
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-file
 
-version: "2.2"
-
 services:
 
   es01:
@@ -55,9 +53,10 @@ services:
           echo "Set the KIBANA_PASSWORD environment variable in the .env file";
           exit 1;
         fi;
+        echo "Setting elasticsearch index replica to zero";
+        curl -s -X PUT -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" http://es01:9200/_settings -d "{\"number_of_replicas\":0}";
         echo "Setting kibana_system password";
-        until curl -s -X POST -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" http://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
-        echo "All done!";
+        curl -s -X POST -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" http://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}";
       '
 
   kibana:
@@ -86,12 +85,19 @@ services:
       retries: 120
 
   beats:
-    image: 'docker.elastic.co/beats/metricbeat:8.4.3'
-    command: >
-      setup -E setup.kibana.host=kibana:5601 -E output.elasticsearch.hosts=["elasticsearch:9200"] 
+    image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
+    depends_on:
+      kibana:
+        condition: service_healthy
+    volumes:
+      - type: bind
+        source: ./metricbeat.yml
+        target: /usr/share/metricbeat/metricbeat.yml
+        read_only: true
+    command: 
+      - -e
+      - --strict.perms=false
 
 volumes:
   es01:
-    driver: local
   kibana:
-    driver: local
