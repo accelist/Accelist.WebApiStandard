@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageType>Template</PackageType>
-    <PackageVersion>1.0</PackageVersion>
+    <PackageVersion>0.1.0</PackageVersion>
     <PackageId>Accelist.WebApiStandard.Templates</PackageId>
     <Title>Accelist Web API Standard Templates</Title>
     <Authors>Ryan Elian</Authors>
@@ -14,7 +14,7 @@
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
-    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <NoWarn>$(NoWarn);NU5128,NU5110,NU5111</NoWarn>
     <NoDefaultExcludes>true</NoDefaultExcludes>
   </PropertyGroup>
 
