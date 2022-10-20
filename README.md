@@ -61,7 +61,7 @@ OIDC_SCOPE=openid profile email roles offline_access api
 
 ## About RabbitMQ...
 
-The default MassTransit integration in the Web API project is enabled against RabbitMQ. If this is not desirable, simply change to use either in-memory transport (single node only, development only) or against cloud implementations such as Azure Service Bus.
+The default MassTransit integration in the Web API project is enabled against RabbitMQ. If this is not desirable, simply change to use either in-memory transport (single node only, development only) or against cloud solutions such as Azure Service Bus.
 
 > Azure Service Bus integration for MassTransit: https://masstransit-project.com/usage/transports/azure-sb.html
 
@@ -69,7 +69,7 @@ In the highly unlikely scenario where you do not need any out-of-process messagi
 
 ## About Kafka Projects...
 
-They are actually not needed to run the web apps. You may safely delete them from your project if you do not need Apache Kafka integrations. (Simply delete `KafkaServices`, `KafkaWorker`, and `DemoKafkaProducer` projects without any side effects)
+They are actually not needed to run the web apps. You may safely delete them from your solution if you do not need Apache Kafka integrations. (Simply delete `KafkaServices`, `KafkaWorker`, and `DemoKafkaProducer` projects without any side effects)
 
 ## MARVEL Software Development Pattern
 
