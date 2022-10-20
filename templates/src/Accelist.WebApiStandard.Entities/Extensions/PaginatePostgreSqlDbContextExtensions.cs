@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore
         private readonly DbSet<TEntity> _dbSet;
         private readonly IEntityType _entityType;
         private readonly string _tableName;
-        private readonly string? _schema;
+        private readonly string _schemaQualifiedTableName;
 
         /// <summary>
         /// Constructs an instance of <see cref="DbSetPagination{TEntity}"/>
@@ -27,22 +27,8 @@ namespace Microsoft.EntityFrameworkCore
             _entityType = entityType;
             _tableName = entityType.GetTableName() ??
                 throw new InvalidOperationException($"Cannot get table name for {typeof(TEntity).Name}");
-            _schema = entityType.GetSchema();
-        }
-
-        /// <summary>
-        /// Gets a fully-formatted schema + table name for querying in PostgreSQL
-        /// </summary>
-        /// <returns></returns>
-        private string GetTableFullName()
-        {
-            // https://www.npgsql.org/efcore/modeling/table-column-naming.html
-            if (_schema != null)
-            {
-                return $"{PaginatePostgreSqlDbContextExtensions.Quote(_schema)}.{PaginatePostgreSqlDbContextExtensions.Quote(_tableName)}";
-            }
-
-            return PaginatePostgreSqlDbContextExtensions.Quote(_tableName);
+            _schemaQualifiedTableName = entityType.GetSchemaQualifiedTableName() ??
+                throw new InvalidOperationException($"Cannot get table name for {typeof(TEntity).Name}");
         }
 
         /// <summary>
@@ -63,7 +49,7 @@ namespace Microsoft.EntityFrameworkCore
                 throw new InvalidOperationException($"Selected member is not a valid Property");
             }
 
-            var soid = StoreObjectIdentifier.Table(_tableName, _schema);
+            var soid = StoreObjectIdentifier.Table(_tableName, _entityType.GetSchema());
             var columnName = _entityType.GetProperty(propertyInfo.Name)?.GetColumnName(soid) ??
                 throw new InvalidOperationException($"Cannot get column name for {propertyInfo.Name}");
 
@@ -96,7 +82,7 @@ namespace Microsoft.EntityFrameworkCore
 
             var comparer = descending ? '<' : '>';
             var column1Name = GetColumnName(column1Selector);
-            var sql = $"SELECT * FROM {GetTableFullName()} WHERE {PaginatePostgreSqlDbContextExtensions.Quote(column1Name)} {comparer} {{0}}";
+            var sql = $"SELECT * FROM {_schemaQualifiedTableName} WHERE {PaginatePostgreSqlDbContextExtensions.Quote(column1Name)} {comparer} {{0}}";
 
             var query = _dbSet.FromSqlRaw(sql, lastColumn1).AsNoTracking();
             if (descending)
@@ -146,7 +132,7 @@ namespace Microsoft.EntityFrameworkCore
 
             // https://learn.microsoft.com/en-us/ef/core/querying/pagination#multiple-pagination-keys
             // https://github.com/dotnet/efcore/issues/26822
-            var sql = $"SELECT * FROM {GetTableFullName()} WHERE ({PaginatePostgreSqlDbContextExtensions.Quote(column1Name)}, {PaginatePostgreSqlDbContextExtensions.Quote(column2Name)}) {comparer} ({{0}}, {{1}})";
+            var sql = $"SELECT * FROM {_schemaQualifiedTableName} WHERE ({PaginatePostgreSqlDbContextExtensions.Quote(column1Name)}, {PaginatePostgreSqlDbContextExtensions.Quote(column2Name)}) {comparer} ({{0}}, {{1}})";
 
             var query = _dbSet.FromSqlRaw(sql, lastColumn1, lastColumn2).AsNoTracking();
             if (descending)
