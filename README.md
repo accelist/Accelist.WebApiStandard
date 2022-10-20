@@ -11,7 +11,7 @@ dotnet nuget add source `
     --username johnsmith `
     --password GITHUB_PERSONAL_ACCESS_TOKEN `
     --store-password-in-clear-text `
-    --name github `
+    --name accelist `
     "https://nuget.pkg.github.com/accelist/index.json"
 ```
 
@@ -36,6 +36,8 @@ Template Name                      Short Name         Language  Tags
 ---------------------------------  -----------------  --------  --------------------
 Accelist Standard Web Application  accelist-standard  [C#]      ASP.NET Core/Web API
 ```
+
+> Update installed template using this command: https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-update
 
 ### Create New Project
 
