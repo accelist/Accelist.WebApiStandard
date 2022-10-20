@@ -7,6 +7,8 @@
     <Authors>Ryan Elian</Authors>
     <Description>ASP.NET Core project templates designed with Clean Architecture, featuring CQRS Pattern, RabbitMQ Messaging, and OpenID Connect Server with ASP.NET Core Identity.</Description>
     <PackageTags>dotnet-new;templates</PackageTags>
+    <RepositoryUrl>https://github.com/accelist/Accelist.WebApiStandard.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType> 
 
     <TargetFramework>netstandard2.0</TargetFramework>
 
