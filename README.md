@@ -65,11 +65,11 @@ The default MassTransit integration in the Web API project is enabled against Ra
 
 > Azure Service Bus integration for MassTransit: https://masstransit-project.com/usage/transports/azure-sb.html
 
-In the highly unlikely scenario where you do not need any out-of-process messaging, you may remove MassTransit from the service collection altogether.
+In the highly unlikely scenario where out-of-process messaging is not needed, MassTransit can be removed from the service collection altogether.
 
 ## About Kafka Projects...
 
-They are actually not needed to run the web apps. You may safely delete them from your solution if you do not need Apache Kafka integrations. (Simply delete `KafkaServices`, `KafkaWorker`, and `DemoKafkaProducer` projects without any side effects)
+They are actually not needed to run the web apps and can be safely deleted from your solution if you do not need Apache Kafka integrations. (Simply delete `KafkaServices`, `KafkaWorker`, and `DemoKafkaProducer` projects without any side effects)
 
 ## MARVEL Software Development Pattern
 
