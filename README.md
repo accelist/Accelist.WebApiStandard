@@ -62,7 +62,6 @@ OIDC_SCOPE=openid profile email roles offline_access api
 ## MARVEL Software Development Pattern
 
 ```mermaid
-%%{init: {'theme': 'forest' } }%%
 graph TD
     START -->|JSON Request| A(API Controller)
     A -->|Authoriation and Enrichment| R{Route Param?}
