@@ -82,14 +82,11 @@ graph TD
     F400 --> G400("return ValidationProblem(ModelState)")
     G400 --> |400 Bad Request| BACK
     F2("Mediator.Send(request)") --> G{Error?}
-    G --> |No| H{Complex logic?}
+    G --> |No| H{Complex, long<br/>running task?}
     G --> |Yes| H500{Can validate<br/>to prevent error?}
-    H --> |Yes.<br/>Chain logic to<br/>another MediatR Request!| B
-    H --> |No|I200(return API response)
-    I200 --> J200{Long running task?}
-    J200 --> |Yes| KRabbit("Publish to Message Bus")
+    H --> |Yes| KRabbit("Publish to MassTransit!")
     KRabbit --> L200
-    J200 --> |No| L200
+    H --> |No| L200
     L200("return API Response") --> |200 OK|BACK
     H500 --> |Yes, go back <br/> to validation design!|C
     H500 --> |No, impossible to validate...|I500("throw / return Problem(...)")
