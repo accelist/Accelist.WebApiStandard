@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="IdentityModel.OidcClient" Version="5.0.2" />
+    <PackageReference Include="IdentityModel.OidcClient" Version="5.1.0" />
   </ItemGroup>
 
 </Project>
