@@ -1,0 +1,14 @@
+services:
+
+  portainer-ce:
+    image: 'portainer/portainer-ce:latest'
+    restart: always
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - 'portainer_data:/data'
+    # Port 9443 is HTTPS, Port 9000 is HTTP 
+    ports:
+      - '9443:9443'
+
+volumes:
+  portainer_data:

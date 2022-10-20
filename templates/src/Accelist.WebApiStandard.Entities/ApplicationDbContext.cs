@@ -30,9 +30,8 @@ namespace Accelist.WebApiStandard.Entities
             builder.Entity<OpenIddictEntityFrameworkCoreScope>().Property(Q => Q.Id).HasMaxLength(36);
             builder.Entity<OpenIddictEntityFrameworkCoreToken>().Property(Q => Q.Id).HasMaxLength(36);
 
-            // D:\VS\Accelist.WebApiStandard\Accelist.WebApiStandard\RequestHandlers\ListUserRequestHandler.cs
+            // Use: Accelist.WebApiStandard/RequestHandlers/ListUserRequestHandler.cs
             builder.Entity<User>().HasIndex(Q => new { Q.GivenName, Q.Id });
-
             builder.Entity<User>().HasTrigramIndex(Q => Q.GivenName);
             builder.Entity<User>().HasTrigramIndex(Q => Q.FamilyName);
             builder.Entity<User>().HasTrigramIndex(Q => Q.Email);

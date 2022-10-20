@@ -3,7 +3,6 @@ using System;
 using Accelist.WebApiStandard.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,10 +11,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Accelist.WebApiStandard.Entities.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221017200225_Initial")]
-    partial class Initial
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,21 +191,6 @@ namespace Accelist.WebApiStandard.Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Email"), "GIN");
-                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Email"), new[] { "gin_trgm_ops" });
-
-                    b.HasIndex("FamilyName");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("FamilyName"), "GIN");
-                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("FamilyName"), new[] { "gin_trgm_ops" });
-
-                    b.HasIndex("GivenName");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("GivenName"), "GIN");
-                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("GivenName"), new[] { "gin_trgm_ops" });
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -216,6 +199,21 @@ namespace Accelist.WebApiStandard.Entities.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.HasIndex("GivenName", "Id");
+
+                    b.HasIndex(new[] { "Email" }, "IX_AspNetUsers_Email_gin_trgrm");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex(new[] { "Email" }, "IX_AspNetUsers_Email_gin_trgrm"), "GIN");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex(new[] { "Email" }, "IX_AspNetUsers_Email_gin_trgrm"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex(new[] { "FamilyName" }, "IX_AspNetUsers_FamilyName_gin_trgrm");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex(new[] { "FamilyName" }, "IX_AspNetUsers_FamilyName_gin_trgrm"), "GIN");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex(new[] { "FamilyName" }, "IX_AspNetUsers_FamilyName_gin_trgrm"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex(new[] { "GivenName" }, "IX_AspNetUsers_GivenName_gin_trgrm");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex(new[] { "GivenName" }, "IX_AspNetUsers_GivenName_gin_trgrm"), "GIN");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex(new[] { "GivenName" }, "IX_AspNetUsers_GivenName_gin_trgrm"), new[] { "gin_trgm_ops" });
 
                     b.ToTable("AspNetUsers", (string)null);
                 });

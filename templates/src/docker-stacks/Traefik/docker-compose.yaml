@@ -1,0 +1,28 @@
+services:
+
+  traefik:
+    image: traefik:v2.9.1
+    restart: always
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=web-secure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--entrypoints.web-secure.address=:443"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  whoami:
+    image: traefik/whoami
+    restart: always
+    labels:
+      - "traefik.http.routers.whoami.rule=Host(`traefik.test`)"
+      - "traefik.http.routers.whoami.tls=true"
+    environment:
+      WHOAMI_NAME: 'whoami'
+    expose:
+      - 80

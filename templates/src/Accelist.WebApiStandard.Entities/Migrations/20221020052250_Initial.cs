@@ -337,21 +337,21 @@ namespace Accelist.WebApiStandard.Entities.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_Email",
+                name: "IX_AspNetUsers_Email_gin_trgrm",
                 table: "AspNetUsers",
                 column: "Email")
                 .Annotation("Npgsql:IndexMethod", "GIN")
                 .Annotation("Npgsql:IndexOperators", new[] { "gin_trgm_ops" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_FamilyName",
+                name: "IX_AspNetUsers_FamilyName_gin_trgrm",
                 table: "AspNetUsers",
                 column: "FamilyName")
                 .Annotation("Npgsql:IndexMethod", "GIN")
                 .Annotation("Npgsql:IndexOperators", new[] { "gin_trgm_ops" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_GivenName",
+                name: "IX_AspNetUsers_GivenName_gin_trgrm",
                 table: "AspNetUsers",
                 column: "GivenName")
                 .Annotation("Npgsql:IndexMethod", "GIN")

@@ -1,0 +1,10 @@
+services:
+
+  # https://masstransit-project.com/quick-starts/rabbitmq.html#get-rabbitmq-up-and-running
+
+  rabbitmq:
+    image: masstransit/rabbitmq
+    restart: always
+    ports:
+      - '15672:15672'
+      - '5672:5672'

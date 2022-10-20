@@ -1,4 +1,8 @@
-version: '3.7'
+# use this stack for development only
+# use Azure Event Hub for Apache Kafka for production:
+# https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-for-kafka-ecosystem-overview
+# https://azure.microsoft.com/en-us/pricing/details/event-hubs/#pricing
+
 services:
   redpanda:
     image: docker.redpanda.com/vectorized/redpanda:v22.2.5
@@ -40,22 +44,3 @@ services:
       - 9093:9093 
     depends_on:
       - redpanda
-
-  # CONSOLE_CONFIG_FILE: |
-  # connect:
-  #   enabled: true
-  #   clusters:
-  #     - name: local-connect-cluster
-  #       url: http://connect:8083
-  # connect:
-  #   image: debezium/connect:2.0
-  #   environment:
-  #     - GROUP_ID=1
-  #     - CONFIG_STORAGE_TOPIC=inventory.configs
-  #     - OFFSET_STORAGE_TOPIC=inventory.offset
-  #     - STATUS_STORAGE_TOPIC=inventory.status
-  #     - BOOTSTRAP_SERVERS=redpanda:29092
-  #   ports:
-  #     - 8083:8083
-  #   depends_on:
-  #     - redpanda
