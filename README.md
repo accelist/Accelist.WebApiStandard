@@ -62,6 +62,7 @@ OIDC_SCOPE=openid profile email roles offline_access api
 ## MARVEL Software Development Pattern
 
 ```mermaid
+%%{init: {'theme': 'forest' } }%%
 graph TD
     START -->|JSON Request| A(API Controller)
     A -->|Authoriation and Enrichment| R{Route Param?}
@@ -78,12 +79,12 @@ graph TD
     G400 -->|400 Bad Request| BACK
     F2("Mediator.Send(request)") --> G{Error?}
     G --> |No|H{Complex logic?}
-    G --> |Yes|H500{Can validate<br/>to prevent<br/>error?}
-    H --> |Yes|B
+    G --> |Yes|H500{Can validate<br/>to prevent error?}
+    H --> |Yes.<br/>Chain logic to<br/>another MediatR Request!|B
     H --> |No|I200(return API response)
     I200 --> |200 Success| BACK
-    H500 --> |Yes, go back|C
-    H500 --> |No, impossible to validate|I500("throw / return Problem(...)")
+    H500 --> |Yes, go back <br/> to validation design!|C
+    H500 --> |No, impossible to validate...|I500("throw / return Problem(...)")
     I500 --> |500 Internal Server Error| BACK(return from API Controller)
     BACK --> |JSON Response| END
 ```
