@@ -1,37 +1,49 @@
 # Accelist Web API Standard
-This is the standard template to be used on all Accelist projects for ensuring our standardized web API request and response flow using the Model-Validation-Request-Response (MVRR) pattern.
 
-## `dotnet new` Template
+ASP.NET Core project templates designed with Clean Architecture, featuring CQRS Pattern, RabbitMQ Messaging, and OpenID Connect Server with ASP.NET Core Identity.
 
-Step 1: Install the template
+## Getting Started
+
+### Add NuGet Source
 
 ```
-git clone https://github.com/accelist/Accelist.WebApiStandard.git
-cd .\Accelist.WebApiStandard\
-dotnet new --install ./
+dotnet nuget add source --username johnsmith --password GITHUB_PERSONAL_ACCESS_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/accelist/index.json"
 ```
 
-> Run `dotnet new --uninstall ./` to remove a stale template
+> [GitHub Packages only supports authentication using a personal access token (classic)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+
+> Read more: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
+
+### Install Template
+
+```
+dotnet new --install Accelist.WebApiStandard.Templates
+```
 
 This message should be displayed in the console:
 
 ```
-Success: installed the following templates:
-Template Name      Short Name         Language  Tags
------------------  -----------------  --------  --------------------
-Accelist Standard  accelist-standard  [C#]      ASP.NET Core/Web API
+The following template packages will be installed:
+   Accelist.WebApiStandard.Templates
+
+Success: Accelist.WebApiStandard.Templates::0.1.1 installed the following templates:
+Template Name                      Short Name         Language  Tags
+---------------------------------  -----------------  --------  --------------------
+Accelist Standard Web Application  accelist-standard  [C#]      ASP.NET Core/Web API
 ```
 
-Step 2: Go to an empty new project folder
+### Create New Project
+
+Go to an empty new project folder
 
 ```
-cd D:\VS\Company.ProjectName
-dotnet new accelist-standard -n Company.ProjectName
+cd D:\VS\Accelist.HelloProject
+dotnet new accelist-standard -n Accelist.HelloProject
 ```
 
 ## Accelist Next.js Starter Jump Start
 
-Set `.env.development` or `.env.local` to these values:
+When using https://github.com/accelist/nextjs-starter set `.env.development` or `.env.local` to these values to integrate with this template:
 
 ```
 BACKEND_API_HOST=http://localhost:5052
@@ -57,10 +69,3 @@ To begin the development of the application, you must install these following so
 | Visual Studio | 2022 | IDE | | (Optional) you could use other IDE or code editor. |
 | Visual Studio Code | | IDE | | (Optional) you could use other IDE or code editor. |
 | Docker | | Container | | (Optional) for test and run the app along with Jaeger. |
-
-## Extras
-
-### Jaeger Tracing
-This web API template also includes [Jaeger](https://www.jaegertracing.io/) integration.
-
-We also provides an example of Jaeger Docker container script on `run-jaeger.ps1`.
