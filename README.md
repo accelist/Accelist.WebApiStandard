@@ -96,6 +96,8 @@ graph TD
 
 ### Clean Architecture: The Pyramid
 
+![Clean Architecture](/docs/clean_architecture.png)
+
 The order of development should be done from top to bottom:
 
 - Entities are defined according to business / user needs. The Functional Specification Document (FSD) / UI Design designed by the project Analyst MUST ALWAYS be referenced when developing the Entities to avoid missing data. Changes to the entities should be EXTREMELY RARE as it forms the foundation of the system.
@@ -107,5 +109,3 @@ The order of development should be done from top to bottom:
 - "The App" is where "The Engine" is mapped against the interface of the system, which is usually JSON Web API. "The App" is the project that is actually run-able and interactive to the developer. A developer can run "The App" and provide it with inputs. The inputs will then be mapped against an API Model and routed into an API Controller. The API Controller is responsible for authorization, validation, and constructing a MediatR Request or a RabbitMQ Message and sending / publishing them. "The App" will then return the correct response which is needed by the UI layer. Changes to Web API should be COMMON because it follows UI requirement.
 
 - "The UI" is the Front-End Web App developed with Next.js or Mobile Apps which interacts with the Web API developed. "The UI" is usually developed according to the FSD / UI Design. Therefore, the Web API must comply to the requirements of "The UI". Changes to "The UI" should be FREQUENT because UI requirement follows evolving business requirements or Change Requests (CR).
-
-![Clean Architecture](/docs/clean_architecture.png)
