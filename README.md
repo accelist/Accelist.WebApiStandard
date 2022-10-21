@@ -85,7 +85,7 @@ graph TD
     AUTH --> |Yes| R{Route<br/>param?}
     AUTH --> |401 Unauthorized<br/>or<br/>403 Forbidden| BACK
     R --> |Exist| B(Create MediatR Request / MassTransit Message)
-    R --> |Invalid param or <br/> resource does not exist!| R404("return NotFound()")
+    R --> |Invalid param<br/>or resource<br/>does not exist!| R404("return NotFound()")
     R404 --> |404 Not Found| BACK
     B --> C{Validate?}
     C --> |Yes| D1(FluentValidation)
