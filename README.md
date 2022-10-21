@@ -91,7 +91,7 @@ graph TD
     C --> |Yes| D1(FluentValidation)
     C --> |No| F2
     D1 --> E{Valid?}
-    E --> |Invalid| F400("validationResult.AddToModelState(ModelState)")
+    E --> |Invalid| F400("validationResult<br/>.AddToModelState(ModelState)")
     E --> |Valid| F2
     F400 --> G400("return ValidationProblem(ModelState)")
     G400 --> |400 Bad Request| BACK
