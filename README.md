@@ -82,10 +82,10 @@ They are actually not needed to run the web apps and can be safely deleted from 
 graph TD
     START --> |JSON Request| A(API Controller)
     A --> |Authorization and Enrichment| R{Route<br/>param?}
-    R --> |Exist| B(Create MediatR Request)
+    R --> |Exist| B(Create MediatR Request / MassTransit Message)
     R --> |Invalid param or <br/> resource does not exist!| R404("return NotFound()")
     R404 --> |404 Not Found| BACK
-    B --> C{Validate<br/>Request?}
+    B --> C{Validate?}
     C --> |Yes| D1(FluentValidation)
     C --> |No| F2
     D1 --> E{Valid?}
@@ -93,12 +93,12 @@ graph TD
     E --> |Valid| F2
     F400 --> G400("return ValidationProblem(ModelState)")
     G400 --> |400 Bad Request| BACK
-    F2("Mediator.Send(request)") --> G{Error?}
-    G --> |No| H{Complex, long<br/>running task?}
-    G --> |Yes| H500{Can validate<br/>to prevent error?}
-    H --> |Yes| KRabbit("Publish to MassTransit!")
+    F2{Complex, long<br/>running task?} --> |Yes| KRabbit("Publish Message<br/>to MassTransit!")
+    F2 --> |No| G
+    G("IMediator.Send(request)") --> Catch{Error?}
+    Catch --> |No| L200
+    Catch --> |Yes| H500{Can validate<br/>to prevent error?}
     KRabbit --> L200
-    H --> |No| L200
     L200("return API Response") --> |200 OK|BACK
     H500 -."Yes.<br/>Go back to<br/>validation design!".-> C
     H500 --> |No, impossible to validate...|I500("throw / return Problem(...)")
