@@ -93,12 +93,14 @@ graph TD
     E --> |Valid| F2
     F400 --> G400("return ValidationProblem(ModelState)")
     G400 --> |400 Bad Request| BACK
-    F2{Complex, long<br/>running task?} --> |Yes| KRabbit("Publish Message<br/>to MassTransit!")
+    F2{Complex, long<br/>running task?} --> |Yes| KBUS("Publish Message<br/>to MassTransit!")
     F2 --> |No| G
-    G("IMediator.Send(request)") --> Catch{Error?}
+    G("IMediator.Send(request)") --> GX(MediatR.IRequestHandler)
+    GX --> Catch{Error?}
     Catch --> |No| L200
     Catch --> |Yes| H500{Can validate<br/>to prevent error?}
-    KRabbit --> L200
+    KBUS -.RabbitMQ or<br/>Azure Service Bus.-> MBUS(Message Consumer)
+    KBUS --> L200
     L200("return API Response") --> |200 OK|BACK
     H500 -."Yes.<br/>Go back to<br/>validation design!".-> C
     H500 --> |No, impossible to validate...|I500("throw / return Problem(...)")
