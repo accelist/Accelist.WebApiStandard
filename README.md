@@ -83,7 +83,7 @@ graph TD
     START --> |JSON Request| A(API Controller)
     A --> |"[Authorize(Policy = ...)]"|AUTH{Authorized?}
     AUTH --> |Yes| R{Route<br/>param?}
-    AUTH --> |401 Unauthorized<br/>or<br/>403 Forbidden| BACK
+    AUTH --> |401 Unauthorized<br/>or<br/>403 Forbidden| END
     R --> |Exist| B(Create MediatR Request / MassTransit Message)
     R --> |Invalid param<br/>or resource<br/>does not exist!| R404("return NotFound()")
     R404 --> |404 Not Found| BACK
