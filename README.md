@@ -81,7 +81,9 @@ They are actually not needed to run the web apps and can be safely deleted from 
 %%{init: {'flowchart' : {'curve' : 'linear'}}}%%
 graph TD
     START --> |JSON Request| A(API Controller)
-    A --> |Authorization and Enrichment| R{Route<br/>param?}
+    A --> |"[Authorize(Policy = ...)]"|AUTH{Authorize?}
+    AUTH --> |Yes| R{Route<br/>param?}
+    AUTH --> |401 Unauthorized<br/>or<br/>403 Forbidden| BACK
     R --> |Exist| B(Create MediatR Request / MassTransit Message)
     R --> |Invalid param or <br/> resource does not exist!| R404("return NotFound()")
     R404 --> |404 Not Found| BACK
