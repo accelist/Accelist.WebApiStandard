@@ -134,7 +134,7 @@ namespace Microsoft.Extensions.Hosting
             }
 
             services.AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
-            services.AddMediatR(typeof(CreateUserRequestHandler));
+            services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(CreateUserRequestHandler).Assembly));
         }
 
         public static void AddOpenIdConnectServer(this IServiceCollection services, Action<OpenIdConnectServerOptions>? optionsBuilder = default)
@@ -151,7 +151,6 @@ namespace Microsoft.Extensions.Hosting
             // Do not use clustering mode of Quartz.NET unless you know what you're doing... (Just run in a single pod)
             services.AddQuartz(options =>
             {
-                options.UseMicrosoftDependencyInjectionJobFactory();
                 options.UseSimpleTypeLoader();
                 options.UseInMemoryStore();
             });

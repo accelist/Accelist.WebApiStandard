@@ -4,19 +4,19 @@
     {
         public static class Endpoints
         {
-            public const string Authorization = "/connect/authorize";
+            public const string Authorization = "connect/authorize";
 
-            public const string Introspection  = "/connect/introspect";
+            public const string Introspection  = "connect/introspect";
 
-            public const string Token = "/connect/token";
+            public const string Token = "connect/token";
 
-            public const string Userinfo = "/connect/userinfo";
+            public const string Userinfo = "connect/userinfo";
 
-            public const string Revoke = "/connect/revoke";
+            public const string Revoke = "connect/revoke";
 
-            public const string Introspect = "/connect/introspect";
+            public const string Introspect = "connect/introspect";
 
-            public const string Logout = "/connect/logout";
+            public const string Logout = "connect/logout";
         }
 
         public static string[] Claims { set; get; } = new string[]

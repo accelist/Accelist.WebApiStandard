@@ -77,7 +77,7 @@ namespace Accelist.WebApiStandard.Services.AutomaticMigrations
             {
                 ClientId = "api-server",
                 DisplayName = "API Server",
-                Type = ClientTypes.Confidential,
+                ClientType = ClientTypes.Confidential,
                 ClientSecret = "HelloWorld1!",
                 Permissions =
                 {
@@ -120,7 +120,7 @@ namespace Accelist.WebApiStandard.Services.AutomaticMigrations
             {
                 ClientId = "demo-m2m",
                 DisplayName = "Demo Client App (Machine to Machine)",
-                Type = ClientTypes.Confidential,
+                ClientType = ClientTypes.Confidential,
                 ClientSecret = "HelloWorld1!",
                 Permissions =
                 {
@@ -164,7 +164,7 @@ namespace Accelist.WebApiStandard.Services.AutomaticMigrations
                     Permissions.Scopes.Address,
                     Permissions.Prefixes.Scope + "api"
                 },
-                Type = ClientTypes.Public
+                ClientType = ClientTypes.Public
             }, cancellationToken);
 
             return await _appManager.GetIdAsync(o, cancellationToken);

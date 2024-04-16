@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Accelist.WebApiStandard.RequestHandlers
 {
-    public class DemoKafkaRequestHandler : AsyncRequestHandler<DemoKafkaRequest>
+    public class DemoKafkaRequestHandler : IRequestHandler<DemoKafkaRequest>
     {
         private readonly ILogger<DemoKafkaRequestHandler> _logger;
 
@@ -13,7 +13,7 @@ namespace Accelist.WebApiStandard.RequestHandlers
             _logger = logger;
         }
 
-        protected override Task Handle(DemoKafkaRequest request, CancellationToken cancellationToken)
+        public Task Handle(DemoKafkaRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Hello from Kafka! {A} + {B} = {C}", request.A, request.B, request.A + request.B);
 

@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Accelist.WebApiStandard.WebApi.Controllers
 {
+    /// <summary>
+    /// Web API controller for handling user-related data transaction.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -17,6 +20,11 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Constructor for UserController.
+        /// </summary>
+        /// <param name="mediator"></param>
+        /// <param name="mapper"></param>
         public UserController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
@@ -24,6 +32,11 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
         }
 
         // GET: api/<UserApiController>
+        /// <summary>
+        /// Get list of users.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpGet]
         public IAsyncEnumerable<ListUserResponse> Get([FromQuery] ListUserRequest model)
         {
@@ -36,6 +49,11 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
         }
 
         // GET api/<UserApiController>/5
+        /// <summary>
+        /// Get user detail by ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<GetUserDetailResponse>> Get(string id)
         {
@@ -53,6 +71,14 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
         }
 
         // POST api/<UserApiController>
+        /// <summary>
+        /// Create new user.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="validator"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         [HttpPost]
         public async Task<ActionResult<string>> Post(
             [FromBody] CreateUserRequest model,
@@ -72,21 +98,45 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
             return response;
         }
 
+        /// <summary>
+        /// Update user model class.
+        /// </summary>
         public class UpdateUserApiModel
         {
+            /// <summary>
+            /// Gets or sets the user's given name.
+            /// </summary>
             public string GivenName { set; get; } = "";
 
+            /// <summary>
+            /// Gets or sets the user's family name.
+            /// </summary>
             public string FamilyName { set; get; } = "";
 
+            /// <summary>
+            /// Gets or sets the user's email address.
+            /// </summary>
             public string Email { set; get; } = "";
 
+            /// <summary>
+            /// Gets or sets the user's enabled status.
+            /// </summary>
             public bool IsEnabled { set; get; }
 
+            /// <summary>
+            /// Gets or sets the user's password.
+            /// </summary>
             public string Password { set; get; } = "";
         }
 
+        /// <summary>
+        /// AutoMapper for UpdateUserApiModel.
+        /// </summary>
         public class UpdateUserApiModelAutoMapper : Profile
         {
+            /// <summary>
+            /// Constructor for UpdateUserApiModelAutoMapper.
+            /// </summary>
             public UpdateUserApiModelAutoMapper()
             {
                 CreateMap<UpdateUserApiModel, UpdateUserRequest>();
@@ -94,6 +144,14 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
         }
 
         // POST api/<UserApiController>/5
+        /// <summary>
+        /// Update user data.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <param name="validator"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         [HttpPost("{id}")]
         public async Task<ActionResult<bool>> Post(
             string id,

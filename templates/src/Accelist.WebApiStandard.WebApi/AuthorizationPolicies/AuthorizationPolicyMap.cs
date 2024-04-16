@@ -5,6 +5,9 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Accelist.WebApiStandard.WebApi.AuthorizationPolicies
 {
+    /// <summary>
+    /// Authorization policy mapper class.
+    /// </summary>
     public static class AuthorizationPolicyMap
     {
         private static readonly Dictionary<string, AuthorizationPolicy> _map = new()
@@ -21,6 +24,9 @@ namespace Accelist.WebApiStandard.WebApi.AuthorizationPolicies
                 .Build(),
         };
 
+        /// <summary>
+        /// Readonly dictionary of authorization policies.
+        /// </summary>
         public static ReadOnlyDictionary<string, AuthorizationPolicy> Map => new(_map);
     }
 }

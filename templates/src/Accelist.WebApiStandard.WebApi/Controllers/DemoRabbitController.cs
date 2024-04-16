@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Accelist.WebApiStandard.WebApi.Controllers
 {
+    /// <summary>
+    /// Demo controller for publishing a message to RabbitMQ.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class DemoRabbitController : ControllerBase
@@ -14,11 +17,21 @@ namespace Accelist.WebApiStandard.WebApi.Controllers
         // IPublishEndpoint only works from the Controller level
         private readonly IPublishEndpoint _publish;
 
+        /// <summary>
+        /// Constructor for DemoRabbitController.
+        /// </summary>
+        /// <param name="publish"></param>
         public DemoRabbitController(IPublishEndpoint publish)
         {
             _publish = publish;
         }
 
+        /// <summary>
+        /// Publishing a message to RabbitMQ example.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<bool>> Post([FromBody] DemoRabbitMessage model, CancellationToken cancellationToken)
         {
