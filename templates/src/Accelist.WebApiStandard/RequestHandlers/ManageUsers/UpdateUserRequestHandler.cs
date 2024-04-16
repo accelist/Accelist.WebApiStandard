@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Accelist.WebApiStandard.RequestHandlers.ManageUsers
 {
-    public class UpdateUserRequestHandler : IRequestHandler<UpdateUserRequest, Unit>
+    public class UpdateUserRequestHandler : IRequestHandler<UpdateUserRequest>
     {
         private readonly UserManager<User> _userManager;
 
@@ -14,10 +14,12 @@ namespace Accelist.WebApiStandard.RequestHandlers.ManageUsers
             _userManager = userManager;
         }
 
-        public async Task<Unit> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateUserRequest request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.Id);
-            user.GivenName = request.GivenName;
+
+            // Assume that user won't be null.
+            user!.GivenName = request.GivenName;
             user.FamilyName = request.FamilyName;
             user.IsEnabled = request.IsEnabled;
 
@@ -30,8 +32,6 @@ namespace Accelist.WebApiStandard.RequestHandlers.ManageUsers
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 await _userManager.ResetPasswordAsync(user, token, request.Password);
             }
-
-            return Unit.Value;
         }
     }
 }

@@ -34,7 +34,7 @@ var message = new DemoKafkaRequest
     A = Convert.ToInt32(value1),
     B = Convert.ToInt32(value2)
 };
-var cts = new CancellationTokenSource(); ;
+var cts = new CancellationTokenSource();
 
 // Step 3: Send Kafka message (plain C# object)
 Console.WriteLine("Sending message to Kafka topic...");
